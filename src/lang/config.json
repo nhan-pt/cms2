@@ -1,0 +1,21 @@
+{
+    "def": "ja",
+    "fallbackLocale": "ja",
+    "langs": [
+        {
+            "code": "vi",
+            "fullCode": "Vietnamese",
+            "sourceCode": "Tiếng Việt"
+        },
+        {
+            "code": "en",
+            "fullCode": "English",
+            "sourceCode": "English"
+        },
+        {
+            "code": "ja",
+            "fullCode": "Japan",
+            "sourceCode": "Japan"
+        }
+    ]
+}
