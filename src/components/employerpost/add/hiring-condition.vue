@@ -1,5 +1,5 @@
 <template>
-  <div v-if="objData">
+  <div v-if="objDataJobPost">
       <div class="container-fluid mb-4">
       <div class="row  basic-row">
         <div
@@ -11,7 +11,7 @@
         <div class="col-9">
           <div class="p-20-0 row">
             <div class="col-6">
-              <select class="form-control" v-model="objData.jobModelId">
+              <select class="form-control" v-model="objDataJobPost.jobModelId">
                 <option value=null> {{$i('Select')}} </option>
                 <option v-for="v in jobModel" :key="'model' +  v.id" :value="v.id">{{v.name}}</option>
               </select>
@@ -29,7 +29,7 @@
         <div class="col-9">
           <div class="p-20-0 row">
             <div class="col-6">
-              <select class="form-control" v-model="objData.jobTypeId">
+              <select class="form-control" v-model="objDataJobPost.jobTypeId">
                 <option value=null> {{$i('Select')}} </option>
                 <option v-for="v in jobType" :key="'model' +  v.id" :value="v.id">{{v.name}}</option>
               </select>
@@ -47,7 +47,7 @@
         <div class="col-9">
           <div class="p-20-0 row">
             <div class="col-6">
-              <select class="form-control" v-model="objData.japaneseCertificationId">
+              <select class="form-control" v-model="objDataJobPost.japaneseCertificationId">
                 <option value=null> {{$i('Select')}} </option>
                 <option v-for="v in japaneseCertification" :key="v.id" :value="v.id">{{v.name}}
                 </option>
@@ -68,7 +68,7 @@
           <div class="p-20-0">
             <table class="table table-borderless">
               <tbody>
-              <tr v-for="(e,i) in objData.shiftJobInPosts" :key="'ship' + i" :class="{'is-invalid has-danger': $v.objData.shiftJobInPosts.$each[i].$dirty && $v.objData.shiftJobInPosts.$each[i].$invalid}">
+              <tr v-for="(e,i) in objDataJobPost.shiftJobInPosts" :key="'ship' + i" :class="{'is-invalid has-danger': $v.objDataJobPost.shiftJobInPosts.$each[i].$dirty && $v.objDataJobPost.shiftJobInPosts.$each[i].$invalid}">
                 <td>
                     <el-select filterable @change="changeShift(i)" remote clearable v-model="e.shiftJobId" :placeholder="$i('cms_recruitment_shift')">
                       <el-option
@@ -159,8 +159,8 @@
         </div>
         <div class="col-9">
           <div class="p-20-0">
-            <div class="row" :class="{'is-invalid has-danger': $v.objData.workingDayId.$dirty && $v.objData.workingDayId.$invalid}">
-                <el-radio-group v-model="objData.workingDayId">
+            <div class="row" :class="{'is-invalid has-danger': $v.objDataJobPost.workingDayId.$dirty && $v.objDataJobPost.workingDayId.$invalid}">
+                <el-radio-group v-model="objDataJobPost.workingDayId">
                   <el-radio class="col-3" v-for="(e,i) in workingDay" :key="i" :label="e.id">{{e.name}}</el-radio>
                 </el-radio-group>
             </div>
@@ -178,7 +178,7 @@
           <div class="p-20-0">
             <div class="row ">
               <div class="col-6 display-flex">
-                <input type="number" class="input-1" v-model="objData.workingHourPerDay">
+                <input type="number" class="input-1" v-model="objDataJobPost.workingHourPerDay">
                 <div class="ml-20">{{$i('hourOrMore')}}</div>
               </div>
             </div>
@@ -196,19 +196,19 @@
         <div class="col-9">
           <div class="p-20-0">
             <div class="row mt-2" v-for="(e,i) in listSalaryType" :key="i+e.id">
-              <div class="col-3 checkbox-salary" :class="{'is-invalid has-danger': $v.objData.salaryTypeId.$dirty && $v.objData.salaryTypeId.$invalid}">
+              <div class="col-3 checkbox-salary" :class="{'is-invalid has-danger': $v.objDataJobPost.salaryTypeId.$dirty && $v.objDataJobPost.salaryTypeId.$invalid}">
                 <label class="">
-                  <input type="radio" name="paymentType" :value="e.id" checked="checked" v-model="objData.salaryTypeId">
+                  <input type="radio" name="paymentType" :value="e.id" checked="checked" v-model="objDataJobPost.salaryTypeId">
                   <span class="span-checkbox">{{e.name}}</span>
                 </label>
               </div>
-              <div class="col-4 display-flex" :class="{'is-invalid has-danger': $v.objData.salary.$dirty && $v.objData.salary.$invalid}">
+              <div class="col-4 display-flex" :class="{'is-invalid has-danger': $v.objDataJobPost.salary.$dirty && $v.objDataJobPost.salary.$invalid}">
                 <money
-                  :disabled="(!objData.salaryTypeId||(objData.salaryTypeId && objData.salaryTypeId != e.id)) ? true : false"
+                  :disabled="(!objDataJobPost.salaryTypeId||(objDataJobPost.salaryTypeId && objDataJobPost.salaryTypeId != e.id)) ? true : false"
                   class="input-1 w-100 salary-input"
-                  :class="(!objData.salaryTypeId||(objData.salaryTypeId && objData.salaryTypeId != e.id)) ? 'disable-salary': '' "
+                  :class="(!objDataJobPost.salaryTypeId||(objDataJobPost.salaryTypeId && objDataJobPost.salaryTypeId != e.id)) ? 'disable-salary': '' "
                    name="salary"
-                  v-model="objData.salary"
+                  v-model="objDataJobPost.salary"
                   v-bind="money">
                 </money>
               </div>
@@ -230,7 +230,7 @@
               <div class="col-3" v-for="(e,i) in paymentMethod" :key="i">
                 <label class="text-normal list-radio">
                   <input type="radio" name="paymentMethodId" :value="e.id" checked="checked"
-                         v-model="objData.paymentMethodId">{{e.name}}
+                         v-model="objDataJobPost.paymentMethodId">{{e.name}}
                   <span class="radio-btn"></span>
                 </label>
               </div>
@@ -261,7 +261,7 @@
               </div>
               <div class="col-6">
                 <div class="display-flex">
-                  <money :disabled="checkTrans==1 ? true: false" class="input-1" v-model="objData.moneyForMove"
+                  <money :disabled="checkTrans==1 ? true: false" class="input-1" v-model="objDataJobPost.moneyForMove"
                          v-bind="money"></money>
                   <div class="ml-20">{{$i('cms_maximum_yen')}}</div>
                 </div>
@@ -351,7 +351,7 @@
         name: "hiring-condition",
         props: ['value'],
         validations: {
-          objData: {
+          objDataJobPost: {
             workingDayId: {
               required
             },
@@ -387,7 +387,7 @@
                 tagIds: [],
                 regimeIds: [],
                 checkTrans: 1,
-                objData: {},
+                objDataJobPost: {},
                 objDataCds: {
                     pageIndex: 1,
                     pageSize: 999
@@ -415,39 +415,38 @@
         },
         watch: {
             'checkTrans'(value) {
-                if (value == 1) this.objData.moneyForMove = 0
+                if (value == 1) this.objDataJobPost.moneyForMove = 0
             },
             'postHiringDateIds': {
                 handler: function (value) {
-                    this.objData.postHiringDateIds = [...value];
-                    this.$emit('input', this.objData)
+                    this.objDataJobPost.postHiringDateIds = [...value];
+                    this.$emit('input', this.objDataJobPost)
                 },
                 deep: true,
             },
             'tagIds': {
                 handler: function (value) {
-                    this.objData.tagIds = [...value];
-                    this.$emit('input', this.objData)
+                    this.objDataJobPost.tagIds = [...value];
+                    this.$emit('input', this.objDataJobPost)
                 },
                 deep: true,
             },
             'regimeIds': {
                 handler: function (value) {
-                    this.objData.regimeIds = [...value];
-                    this.$emit('input', this.objData)
+                    this.objDataJobPost.regimeIds = [...value];
+                    this.$emit('input', this.objDataJobPost)
                 },
                 deep: true,
             }
         },
         methods: {
             changeShift(value) {
-                let data = this.objData.shiftJobInPosts[value]
+                let data = this.objDataJobPost.shiftJobInPosts[value]
                 data.shiftJobStart = this.shiftJobStart.filter(e => e.shiftJobId == data.shiftJobId)
                 data.shiftJobEnd = this.shiftJobEnd.filter(e => e.shiftJobId == data.shiftJobId)
             },
             confirm() {
               let invalid = this.$v.$invalid;
-              console.log(invalid)
               if (invalid) {
                 this.$v.$touch();
                 this.$message(this.$i('cms_job_post_enter_required_fields'),'warning');
@@ -480,18 +479,18 @@
                 this.isIndeterminate = false;
             },
             getDataSalary() {
-                if (!this.objData.listSalary) {
+                if (!this.objDataJobPost.listSalary) {
                     this.listSalaryType = [...this.salaryType]
                     this.listSalaryType.map(e => {
                         e.salary = 0
-                        if(this.objData.salaryTypeId == e.id) e.salary = this.objData.salary
+                        if(this.objDataJobPost.salaryTypeId == e.id) e.salary = this.objDataJobPost.salary
                     })
-                    this.objData.listSalary = this.listSalaryType
+                    this.objDataJobPost.listSalary = this.listSalaryType
                 } else
-                    this.listSalaryType = this.objData.listSalary
+                    this.listSalaryType = this.objDataJobPost.listSalary
             },
             addShift() {
-                this.objData.shiftJobInPosts.push({
+                this.objDataJobPost.shiftJobInPosts.push({
                     shiftJobId: null,
                     startWorking: null,
                     endWorking: null,
@@ -500,10 +499,10 @@
                 })
             },
             removeShift(index) {
-                this.objData.shiftJobInPosts.splice(index, 1);
+                this.objDataJobPost.shiftJobInPosts.splice(index, 1);
             },
             getData() {
-                this.objData.shiftJobInPosts.map(e => {
+                this.objDataJobPost.shiftJobInPosts.map(e => {
                     if(e.shiftJobId) {
                         e.shiftJobStart = this.shiftJobStart.filter(i => i.shiftJobId == e.shiftJobId)
                         e.shiftJobEnd = this.shiftJobEnd.filter(i => i.shiftJobId == e.shiftJobId)
@@ -513,11 +512,11 @@
             },
         },
         mounted() {
-            this.objData = this.value || {};
-            this.postHiringDateIds = this.objData.postHiringDateIds;
-            this.tagIds = this.objData.tagIds;
-            this.regimeIds = this.objData.regimeIds;
-            if (this.objData.moneyForMove && (this.objData.moneyForMove > 0)) this.checkTrans = 2
+            this.objDataJobPost = this.value || {};
+            this.postHiringDateIds = this.objDataJobPost.postHiringDateIds;
+            this.tagIds = this.objDataJobPost.tagIds;
+            this.regimeIds = this.objDataJobPost.regimeIds;
+            if (this.objDataJobPost.moneyForMove && (this.objDataJobPost.moneyForMove > 0)) this.checkTrans = 2
             this.getData();
 
         }

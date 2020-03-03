@@ -185,30 +185,6 @@
       <div class="group-panlebody-candidate-list">
         <div class="panel-head-fill__ha mb-4">
           <div class="group-chosen-candidate">
-<!--            TODO: Đây là các action tiện ích có thể tiến hành đồng loạt. Danh sách các action cần cho tiện ích hiện chưa có nên không cần cái này-->
-<!--            <div class="text">{{$i('cms_chosen_candidate')}}</div>-->
-<!--            <div class="group-select">-->
-<!--              <el-select class="group-select__ha"-->
-<!--                         v-model="changeStatus"-->
-<!--                         :placeholder="$i(listTab[0].label)"-->
-<!--              >-->
-<!--                <el-option-->
-<!--                  v-for="v in listTab"-->
-<!--                  :key="v.id"-->
-<!--                  :label="$i(v.label)"-->
-<!--                  :value="v.id">-->
-<!--                </el-option>-->
-<!--              </el-select>-->
-<!--            </div>-->
-<!--            <div class="text">{{$i('cms_chosen_set_to')}}</div>-->
-<!--            <div class="list-btn__ha">-->
-<!--              <div class="item-btn">-->
-<!--                <input class="btn text-bold text-white btn-list-view bg-27ACCE"-->
-<!--                       type="button"-->
-<!--                       @click="changeStatusIds()"-->
-<!--                       :value="$i('cms_execute')" />-->
-<!--              </div>-->
-<!--            </div>-->
           </div>
           <div class="list-fillter-candidate">
             <div class="list-fillter">
@@ -233,10 +209,6 @@
               <table v-if="candidateMemberList" class="table table-hover table-bordered table-applied-jobs fixed-table">
                 <thead>
                   <tr>
-                  <th class=" text-center">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
-                                 @change="handleCheckAllChange"></el-checkbox>
-                  </th>
                   <th class="text-bold text-nowrap fixed-left-row" >
                     <div class="group-total-increase__ha">
                       <div class="text fixed-left-row">{{$i('cms_candidate_name')}}</div>
@@ -316,11 +288,6 @@
                 </thead>
                 <tbody>
                   <tr v-if="checkKeyword" v-for="(e,i) in listSearch" :key="i">
-                    <td class="width-60 text-center">
-                      <el-checkbox-group v-model="checkedIndex" @change="handleCheckedIndex">
-                        <el-checkbox :label="e.id" :key="e.id"></el-checkbox>
-                      </el-checkbox-group>
-                    </td>
                     <td class="name-vi fixed-left-row" >
                       <div class="width-250 td-nowrap"  :title="e.name">
                         <a href="javascript:;" @click="redirect(e.id)" >{{e.name}}</a>
@@ -332,59 +299,62 @@
                       </div>
                     </td>
                     <td class="gender">
-                      <div class=" width-150 td-nowrap" v-for="v in listGender" v-if="v.id==e.gender">{{$i(v.name)}}</div>
+                      <div class=" width-150 td-nowrap" v-for="v in listGender" :key="v.id" v-if="v.id==e.gender">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{$i(v.name)}}</a>
+                      </div>
                     </td>
                     <td class="phone-number width-250 td-nowrap" :title="e.mobile">
-                      <div class=" width-150 td-nowrap">{{e.mobile}}</div>
+                      <div class=" width-150 td-nowrap">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{$i(e.mobile)}}</a>
+                      </div>
                     </td>
                     <td class="birth-date">
-                      <div class=" width-350 td-nowrap text-center">{{formatDate(e.birthday)}}</div>
+                      <div class=" width-350 td-nowrap text-center">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{formatDate(e.birthday)}}</a>
+                      </div>
                     </td>
                     <td class="station" >
                       <div class="width-250 td-nowrap" >
                         <div v-if="e.address && e.address.stations && e.address.stations.length">
-                          <div v-for="(v,a) in e.address.stations" :key="a"> {{v.trainStationName}} - {{v.trainLineName}}</div>
+                          <div v-for="(v,a) in e.address.stations" :key="a">
+                            <a href="javascript:;" @click="redirect(e.id)" > {{v.trainStationName}} - {{v.trainLineName}}</a>
+                          </div>
                         </div>
                       </div>
                     </td>
                     <td class="zip-code	">
                       <div v-if="e.address && e.address.zipCode">
-                        {{e.address.zipCode}}
+                        <a href="javascript:;" @click="redirect(e.id)" >{{e.address.zipCode}}</a>
                       </div>
                     </td>
                     <td class="japanese-skill	">
-                      <div class=" width-120 td-nowrap text-center">{{e.japaneseSkillName}}
+                      <div class=" width-120 td-nowrap text-center">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{e.japaneseSkillName}}</a>
                       </div>
                     </td>
                     <td class="residence-status">
                       <div class=" width-100 td-nowrap text-center" v-for="i in residentType" :key="i.id"
-                          v-if="i.id == e.residentTypeId" :title="$i(i.name)">{{$i(i.name)}}
+                          v-if="i.id == e.residentTypeId" :title="$i(i.name)">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{$i(i.name)}}</a>
                       </div>
                     </td>
                     <td class="profile-status text-not-verified">
                       <div>
                         <div class=" width-150 text-center td-nowrap" v-for="i in listTab" :key="i.id"
-                            v-if="i.id == e.isAvailable" :class="i.class">{{$i(i.label)}}
+                            v-if="i.id == e.isAvailable" :class="i.class">
+                          <a href="javascript:;" @click="redirect(e.id)" >{{$i(i.label)}}</a>
                         </div>
                       </div>
                     </td>
                     <td class="btn-action fixed-right-row">
                         <div class="width-120 nowrap-row">
-                          <button class="btn text-white bg-orange" @click="edit(e.id)">
+                          <button class="btn text-white bg-purple" @click="edit(e.id)">
                             <i class="fa fas fa-edit"></i>
-                          </button>
-                          <button class="btn btn-trash" @click="removeMember(e.id)">
-                            <i class="fa fa-trash-alt"></i>
                           </button>
                         </div>
                     </td>
                   </tr>
                   <tr v-if="!checkKeyword" v-for="(e,i) in candidateMemberList" :key="i">
-                    <td class="width-60 text-center">
-                      <el-checkbox-group v-model="checkedIndex" @change="handleCheckedIndex">
-                        <el-checkbox :label="e.id" :key="e.id"></el-checkbox>
-                      </el-checkbox-group>
-                    </td>
                     <td class="name-vi fixed-left-row" >
                       <div class="width-250 td-nowrap"  :title="e.name">
                         <a href="javascript:;" @click="redirect(e.id)" >{{e.name}}</a>
@@ -396,49 +366,57 @@
                       </div>
                     </td>
                     <td class="gender">
-                      <div class=" width-150 td-nowrap" v-for="v in listGender" v-if="v.id==e.gender">{{$i(v.name)}}</div>
+                      <div class=" width-150 td-nowrap" v-for="v in listGender" :key="v.id" v-if="v.id==e.gender">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{$i(v.name)}}</a>
+                      </div>
                     </td>
                     <td class="phone-number width-250 td-nowrap" :title="e.mobile">
-                      <div class=" width-150 td-nowrap">{{e.mobile}}</div>
+                      <div class=" width-150 td-nowrap">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{$i(e.mobile)}}</a>
+                      </div>
                     </td>
                     <td class="birth-date">
-                      <div class=" width-350 td-nowrap text-center">{{formatDate(e.birthday)}}</div>
+                      <div class=" width-350 td-nowrap text-center">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{formatDate(e.birthday)}}</a>
+                      </div>
                     </td>
                     <td class="station" >
                       <div class="width-250 td-nowrap" >
                         <div v-if="e.address && e.address.stations && e.address.stations.length">
-                          <div v-for="(v,a) in e.address.stations" :key="a"> {{v.trainStationName}} - {{v.trainLineName}}</div>
+                          <div v-for="(v,a) in e.address.stations" :key="a">
+                            <a href="javascript:;" @click="redirect(e.id)" > {{v.trainStationName}} - {{v.trainLineName}}</a>
+                          </div>
                         </div>
                       </div>
                     </td>
                     <td class="zip-code	">
                       <div v-if="e.address && e.address.zipCode">
-                        {{e.address.zipCode}}
+                        <a href="javascript:;" @click="redirect(e.id)" >{{e.address.zipCode}}</a>
                       </div>
                     </td>
                     <td class="japanese-skill	">
-                      <div class=" width-120 td-nowrap text-center">{{e.japaneseSkillName}}
+                      <div class=" width-120 td-nowrap text-center">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{e.japaneseSkillName}}</a>
                       </div>
                     </td>
                     <td class="residence-status">
                       <div class=" width-100 td-nowrap text-center" v-for="i in residentType" :key="i.id"
-                          v-if="i.id == e.residentTypeId" :title="$i(i.name)">{{$i(i.name)}}
+                          v-if="i.id == e.residentTypeId" :title="$i(i.name)">
+                        <a href="javascript:;" @click="redirect(e.id)" >{{$i(i.name)}}</a>
                       </div>
                     </td>
                     <td class="profile-status text-not-verified">
                       <div>
                         <div class=" width-150 text-center td-nowrap" v-for="i in listTab" :key="i.id"
-                            v-if="i.id == e.isAvailable" :class="i.class">{{$i(i.label)}}
+                            v-if="i.id == e.isAvailable" :class="i.class">
+                          <a href="javascript:;" @click="redirect(e.id)" >{{$i(i.label)}}</a>
                         </div>
                       </div>
                     </td>
                     <td class="btn-action fixed-right-row">
                         <div class="width-120 nowrap-row">
-                          <button class="btn text-white bg-orange" @click="edit(e.id)">
+                          <button class="btn text-white bg-purple" @click="edit(e.id)">
                             <i class="fa fas fa-edit"></i>
-                          </button>
-                          <button class="btn btn-trash" @click="removeMember(e.id)">
-                            <i class="fa fa-trash-alt"></i>
                           </button>
                         </div>
                     </td>
@@ -449,32 +427,6 @@
           </div>
           <pager :total="candidateMemberCount" :pageIndex="objData.pageIndex" :pageSize="objData.pageSize"
                  @change="pageChange"/>
-<!--          <div class="panel-head-fill__ha mt-4">-->
-<!--              <div class="group-chosen-candidate">-->
-<!--                  <div class="text">Chosen candidate</div>-->
-<!--                  <div class="group-select">-->
-<!--                      <el-select class="group-select__ha"-->
-<!--                                 v-model="changeStatus"-->
-<!--                                 :placeholder="$i('cms_status')"-->
-<!--                      >-->
-<!--                          <el-option-->
-<!--                            v-for="v in listTab"-->
-<!--                            :key="v.id"-->
-<!--                            :label="$i(v.label)"-->
-<!--                            :value="v.id">-->
-<!--                          </el-option>-->
-<!--                      </el-select>-->
-<!--                  </div>-->
-<!--                  <div class="list-btn__ha">-->
-<!--                      <div class="item-btn">-->
-<!--                        <input class="btn text-bold text-white btn-list-view bg-27ACCE"-->
-<!--                               type="button"-->
-<!--                               @click="changeStatusIds()"-->
-<!--                               :value="$i('cms_execute')" />-->
-<!--                      </div>-->
-<!--                  </div>-->
-<!--              </div>-->
-<!--          </div>-->
         </div>
       </div>
 <!--    </section>-->
@@ -484,8 +436,7 @@
 
 <script>
   import {mapActions, mapGetters} from 'vuex';
-  import {CandidateInfoAvailable} from '../../types/enum'
-  import {Gender} from '../../types/enum'
+  import {CandidateInfoAvailable, Gender} from '../../types/enum'
 
   export default {
     data() {
@@ -534,14 +485,9 @@
         searchResidentType: null,
         searchStatus: null,
         listSearch: [],
-
-        /* list checkbox  */
-        checkAll: false,
-        checkedIndex: [],
-        isIndeterminate: true,
         vuexTab: {
           checktab: true,
-          isAvailable: 1,
+          isAvailable: CandidateInfoAvailable.AVAILABEL,
         },
         objData: {},
         objLocation: {
@@ -675,7 +621,7 @@
       ...mapGetters(['candidateMemberList', 'candidateMemberCount', 'province', 'japaneseCertification', 'residentType', 'objSearchCandidate', 'tab'])
     },
     methods: {
-      ...mapActions(['updateStatusCandidateIds', 'getListCandidateMember', 'deleteMember', 'searchListDistrict', 'searchListStation', 'saveSearchCandidate', 'saveTab']),
+      ...mapActions(['updateStatusCandidateIds', 'getListCandidateMember', 'searchListDistrict', 'searchListStation', 'saveSearchCandidate', 'saveTab']),
       getList(index) {
         if (index) {
           this.objData.pageIndex = index;
@@ -776,16 +722,6 @@
         })
         this.listTab.find(e => e.id == id).status = 'active'
       },
-      /* checkbox index*/
-      handleCheckAllChange(val) {
-        this.checkedIndex = val ? this.candidateMemberList.map(e => e.id) : [];
-        this.isIndeterminate = false;
-      },
-      handleCheckedIndex(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.candidateMemberList.map(e => e.id).length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.candidateMemberList.map(e => e.id).length;
-      },
 
       getDistrict() {
         this.searchListDistrict(this.objLocation)
@@ -836,27 +772,6 @@
         this.candidateMemberList.sort(this.compareUpDate);
       },
       
-      removeMember(id) {
-        this.$confirm(this.$i('DoYouWantToDeleteMember')).then(() => {
-          
-          let loading = this.$loading.show();
-          let obj = {
-            memberId: id,
-            status: 0
-          }
-          this.deleteMember(obj).then((res) => {
-            loading.hide();
-            if (res.success) {
-              this.$message(this.$i('Successful'));
-            }
-            this.getList();
-          }).catch(err => {
-            this.$error(err.messages);
-            loading.hide();
-          })
-        });
-      },
-
       changeStatusIds(id) {
         if (!this.checkedIndex || !this.checkedIndex.length) {
           this.$message(this.$i('You_have_not_selected_candidate'), 'error');

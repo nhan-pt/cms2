@@ -449,7 +449,7 @@
                     <div class="content-candidate-right p-y-15">
                       <div class="box-row rule" v-if="objData.candidateLanguage && objData.candidateLanguage.memberLanguageId">
                         <div class="texts" 
-                             v-for="(e,i) in national"
+                             v-for="(e,i) in memberLanguage"
                              :key="i"
                              v-if="objData.candidateLanguage.memberLanguageId==e.id"> {{e.name}}
                         </div>
@@ -704,7 +704,7 @@
       }
     },
     computed: {
-      ...mapGetters(['district', 'japaneseCertification', 'residentType', 'province', 'memberLanguage', 'national', 'regime', 'languageLevel']),
+      ...mapGetters(['district', 'japaneseCertification', 'residentType', 'province', 'memberLanguage', 'memberLanguage', 'regime', 'languageLevel']),
 
     },
     watch: {

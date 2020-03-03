@@ -25,7 +25,7 @@
                 <img class="image" :src="objectData.avatar" alt="company-logo">
             </div>
         </section>
-        <section class="group-tab-candidate__ha" id="tab-candidate__ha">
+        <!-- <section class="group-tab-candidate__ha" id="tab-candidate__ha">
             <div class="group-panelhead-create-candidate mb-5">
                 <div class="list-item-create-candidate">
                     <div class="item-create-candidate active">
@@ -37,7 +37,7 @@
 
                 </div>
             </div>
-        </section>
+        </section> -->
         <div class="company__details mb-4">
             <div class="panelhead-candidate__ha">
                 <div class="heading-1 name-title-page__ha"> {{$i('cms_employer_create_company_detail')}} </div>
@@ -302,7 +302,7 @@
                                         <div class="row w-100">
                                             <div class="col-6">
                                                 <div class="texts w-100">
-                                                    {{objectData.section == 1 ? $i('cms_employer_list_public'): objectData.section == "0" ? $i('cms_employer_list_private') : " "}}
+                                                    {{objectData.section === PUBLIC ? $i('cms_employer_list_public'): objectData.section === PRIVATE ? $i('cms_employer_list_private') : " "}}
                                                 </div>
                                             </div>
                                         </div>
@@ -324,7 +324,7 @@
                                         <div class="row w-100">
                                             <div class="col-6">
                                                 <div class="texts w-100">
-                                                    {{objectData.status == 1 ? $i('cms_employer_list_active') : objectData.status == 2 ? $i('cms_employer_list_unconfirm') : " "}}
+                                                    {{objectData.status === ACTIVE ? $i('cms_employer_list_active') : objectData.status === UNCONFIRM ? $i('cms_employer_list_unconfirm') : " "}}
                                                 </div>
                                             </div>
                                         </div>
@@ -487,6 +487,7 @@ import {
     mapGetters,
     mapActions
 } from 'vuex'
+import {EmployerSection,EmployerStatus} from '../../../types/enum'
 
 export default {
     data() {
@@ -499,6 +500,10 @@ export default {
                 pageSize: 999,
                 status: 1,
             },
+            UNCONFIRM: EmployerStatus.UNCONFIRM,
+            ACTIVE: EmployerStatus.ACTIVE,
+            PUBLIC: EmployerSection.PUBLIC,
+            PRIVATE: EmployerSection.PRIVATE
         }
     },
     props: {

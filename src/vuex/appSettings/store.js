@@ -1,8 +1,6 @@
 ﻿import * as actions from './actions';
 import CONSTANTS from '../../core/utils/constants';
 import * as app from '../../main.js';
-console.log(app);
-
 let appSettings = null;
 if (typeof (app.window) !== 'undefined') {
     appSettings = app.window.appSettings;

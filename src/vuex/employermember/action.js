@@ -17,6 +17,21 @@ export const getListEmployerMember = ({ commit }, opts) => {
         });
     })
 };
+export const getMiniEmployer = ({ commit }, opts) => {
+    return new Promise((resolve, reject) => {
+        return axios({
+            data: {
+                url: '/cms/employer/list-employer-member'
+            },
+            method: 'get',
+            params: opts,
+        }).then(response => {
+            return resolve(response);
+        }).catch(err => {
+            return reject(err);
+        });
+    })
+};
 export const updateSectionEmployer = ({ commit }, opts) => {
     return new Promise((resolve, reject) => {
         axios({
@@ -167,19 +182,17 @@ export const updatePass = ({ commit }, opts) => {
 };
 export const resetEmployerSearch = ({ commit }, data) => {
     return commit('RESET_SEARCH_EMPLOYER', {
-        params: {
-            pageSize: 10,
-            pageIndex: 1,
-            provinceId: null,
-            districtId: null,
-            stationId: [],
-            trainLineId: null,
-            section: null,
-            status: null,
-            minEmployee: null,
-            maxEmployee: null,
-            minCapital: null,
-            maxCapital: null,
-        },
+        pageSize: 10,
+        pageIndex: 1,
+        provinceId: null,
+        districtId: null,
+        stationId: [],
+        trainLineId: null,
+        section: null,
+        status: null,
+        minEmployee: null,
+        maxEmployee: null,
+        minCapital: null,
+        maxCapital: null,
     });
 };

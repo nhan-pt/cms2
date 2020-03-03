@@ -40,7 +40,7 @@ export default {
             this.$i('cms_employer_list_location_num'),
             this.$i('cms_employer_list_Address'), 
             this.$i('cms_employer_list_Station'), 
-            this.$i('cms_employer_list_Employee _num '), 
+            this.$i('cms_employer_list_employees_number'), 
             this.$i('cms_employer_list_capital'), 
             this.$i('cms_employer_list_Section'), 
             this.$i('cms_employer_list_Status'),

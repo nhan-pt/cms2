@@ -1,5 +1,5 @@
 <template>
-<button class="btn btn-csv-applicant" @click="csvExport()">CSV Dowload</button>
+<button class="btn btn-csv-applicant" @click="csvExport()">{{$i('cms_employer_list_csv_dowload')}}</button>
 </template>
 
 <script>
@@ -32,6 +32,7 @@ export default {
         // export csv
         csvExport() {
             this.objData.pageSize = 999
+            this.objData.orderBy = 'ID'
             this.exportApplicant(this.objData)
                 .then(response => {
                     const options = {
@@ -70,7 +71,7 @@ export default {
                         e.residentName = e.candidate && e.candidate.residentName != null ? e.candidate.residentName : ""
                         e.katakanaName = e.candidate && e.candidate.katakanaName != null ? e.candidate.katakanaName : ""
                         e.name = e.candidate && e.candidate.name != null ? e.candidate.name : ""
-                        e.location = e.employerPost && e.employerPost.shopName != null ? e.employerPost.shopName : ""
+                        e.location = e.employerPost && e.employerPost.branchName != null ? e.employerPost.branchName : ""
                         e.interviewSchedules = e.interviewSchedules && e.interviewSchedules.length != 0 ? e.interviewSchedules.map(i => this.formatDate(i.interviewDate) + " " + this.formatShift(i.startHour) + "~" + this.formatShift(i.endHour)).toString(", ") : ""
                         e.applyShiftJobInPosts = e.applyShiftJobInPosts && e.applyShiftJobInPosts.length != 0 ? e.applyShiftJobInPosts.map(i => i.name + " " + this.formatShift(i.startWorking) + "~" + this.formatShift(i.endWorking)).toString(", ") : ""
         

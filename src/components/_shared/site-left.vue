@@ -157,11 +157,23 @@
                         <span>{{$i('EmployerPost')}}</span>
                     </router-link>
                 </li>
+                <li v-if="$isPermiss(7)" @click="reset">
+                    <router-link to="/transaction" :title="$i('cms_list_transaction')">
+                        <i class="fas fa-yen-sign"></i>
+                        <span>{{$i('cms_list_transaction')}}</span>
+                    </router-link>
+                </li>
                 <li class="menu-title">{{$i('member')}}</li>
                 <li @click="reset">
                     <router-link to="/employermember" :title="$i('EmployerMember')">
                         <i class="fa fa-user-md"></i>
                         <span>{{$i('EmployerMember')}}</span>
+                    </router-link>
+                </li>
+                <li @click="reset">
+                    <router-link to="/branch" :title="$i('cms_branch')">
+                        <i class="mdi mdi-24px fas mdi-source-branch"></i>
+                        <span>{{$i('cms_branch')}}</span>
                     </router-link>
                 </li>
                 <li @click="reset">
@@ -207,7 +219,12 @@
 
 <script>
 import Vue from 'vue'
+import vueScroll from 'vuescroll'
 import CONSTANTS from '../../core/utils/constants';
+import {
+        PostApply,
+} from '../../types/enum';
+import _ from 'lodash'
 import {
     mapActions,
     mapGetters
@@ -218,12 +235,12 @@ if (typeof (localStorage) !== 'undefined') {
     try {
         menuMode = localStorage.getItem(CONSTANTS.MENU_MODE) || '';
     } catch (e) {
-        console.log(e);
+
     }
 }
 export default {
     components: {
-        
+        vueScroll
     },
     props: {
         open: {
@@ -291,10 +308,34 @@ export default {
         });
     },
     methods: {
-        ...mapActions(['resetCandidate','resetEmployerSearch']),
+        ...mapActions(['resetCandidate','resetEmployerSearch', 'saveSearchApplication', 'saveTabApplication']),
         reset() {
             this.resetCandidate();
-            this.resetEmployerSearch()
+            this.resetEmployerSearch();
+            let objSearchApplication = {
+                    pageSize: 10,
+                    pageIndex: 1,
+                    employerId: null,
+                    provinceId: null,
+                    districtId: null,
+                    stationIds: [],
+                    trainLineId: null,
+                    minSalary: null,
+                    maxSalary: null,
+                    orderType: 'DESC',
+                    orderBy: 'CREATEDDATE',
+                    staties: PostApply.APPLIED,
+                    startDate: null,
+                    endDate: null,
+                    branchId:null
+                }
+            let tabApplication = {
+                checktab:true,
+                status: PostApply.APPLIED
+            }
+            this.saveSearchApplication(objSearchApplication)
+            this.saveTabApplication(tabApplication)
+            localStorage.removeItem("search-branch")
         },
         cancelFullScreen(el) {
             var requestMethod = el.cancelFullScreen || el.webkitCancelFullScreen || el.mozCancelFullScreen || el.exitFullscreen;

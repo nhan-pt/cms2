@@ -1,5 +1,5 @@
 <template>
-  <div v-if="objData">
+  <div v-if="objDataJobPost">
       <div class="container-fluid mb-4">
         <div class="row basic-row">
       <div
@@ -31,9 +31,9 @@
             <div class="row p-20-0">
               <div class="col-6">
                 <label class="text-normal">{{$i('cms_job_post_posting_date')}}</label>
-                <div :class="{'is-invalid has-danger': $v.objData.startDate.$dirty && $v.objData.startDate.$invalid}">
+                <div :class="{'is-invalid has-danger': $v.objDataJobPost.startDate.$dirty && $v.objDataJobPost.startDate.$invalid}">
                     <el-date-picker
-                      v-model="objData.startDate"
+                      v-model="objDataJobPost.startDate"
                       :picker-options="datePickerStart"
                       type="date"
                       class="width-date"
@@ -45,9 +45,9 @@
               </div>
               <div class="col-6">
                 <label class="text-normal">{{$i('cms_job_post_closing_date')}}</label>
-                <div :class="{'is-invalid has-danger': $v.objData.endDate.$dirty && $v.objData.endDate.$invalid}">
+                <div :class="{'is-invalid has-danger': $v.objDataJobPost.endDate.$dirty && $v.objDataJobPost.endDate.$invalid}">
                     <el-date-picker
-                    v-model="objData.endDate"
+                    v-model="objDataJobPost.endDate"
                     :picker-options="datePickerEnd"
                     type="date"
                     class="width-date"
@@ -70,7 +70,7 @@
           <div class="col-9">
             <div class="row p-20-0">
               <div class="col-6">
-                <select class="form-control" v-model="objData.status">
+                <select class="form-control" v-model="objDataJobPost.status">
                   <option v-for="item in listStatus"
                           :key="item.status"
                           :value="item.status">
@@ -106,11 +106,14 @@
     required,
     minLength
   } from 'vuelidate/lib/validators'
+  import {
+        EmployerPost
+  } from '../../../types/enum';
     export default {
         name: "posting",
         props: ['value'],
         validations: {
-          objData: {
+          objDataJobPost: {
             endDate: {
               required
             },
@@ -128,7 +131,7 @@
         data() {
             return {
                 checkVali:false,
-                objData: {},
+                objDataJobPost: {},
                 employerPostImages: [],
                 employerPostImages2: [],
                 datePickerEnd: {
@@ -139,15 +142,15 @@
                 },
                 listStatus: [
                     {
-                        status: 1,
+                        status: EmployerPost.ACTIVE,
                         label: 'Active'
                     },
                     {
-                        status: 2,
-                        label: 'Inactive'
+                        status: EmployerPost.INACTIVE,
+                        label: 'cms_job_post_invalid'
                     },
                     {
-                        status: 4,
+                        status: EmployerPost.NONPOSTING,
                         label: 'Non-posting'
                     },
                 ],
@@ -156,11 +159,11 @@
             }
         },
         watch: {
-            'objData.startDate'(value) {
+            'objDataJobPost.startDate'(value) {
                 if(this.$route.params.id) {
                     setTimeout(() => {
                         let column = this.listStatus.find(e => {
-                            return e.status == 1
+                            return e.status == EmployerPost.ACTIVE
                         })
                         let index = this.listStatus.indexOf(column)
                         let today = new Date()
@@ -168,23 +171,22 @@
                         value = new Date(value)
                         if (value.getTime() - today.getTime() > 0) {
                             if (index != -1) this.listStatus.splice(index, 1);
-                            this.objData.status = 4
                         } else  {
                             if (index != -1) this.listStatus.splice(index, 1);
                             this.listStatus.unshift({
-                                status: 1,
+                                status: EmployerPost.ACTIVE,
                                 label: 'Active'
                             });
                         }
-                        if (value.getTime() > new Date(this.objData.endDate).getTime()) this.objData.endDate = null
+                        if (value.getTime() > new Date(this.objDataJobPost.endDate).getTime()) this.objDataJobPost.endDate = null
                     }, 1000);
                 }
             },
             'employerPostImages2': {
                 handler: function (value) {
                     // transfer data employerPostImages2 to this.objData
-                    this.objData.employerPostImages = [...value];
-                    this.$emit('input', this.objData)
+                    this.objDataJobPost.employerPostImages = [...value];
+                    this.$emit('input', this.objDataJobPost)
                 },
                 deep: true,
             },
@@ -209,8 +211,8 @@
             disabledDueDate (time) {
               let today = new Date(); 
               today.setHours(0,0,0,0);
-              if(this.objData.startDate == null) return time.getTime() < today.getTime()
-              return time.getTime() < new Date(this.objData.startDate).getTime()
+              if(this.objDataJobPost.startDate == null) return time.getTime() < today.getTime()
+              return time.getTime() < new Date(this.objDataJobPost.startDate).getTime()
             },
             disabledDueDateStart (time) {
               let today = new Date(); 
@@ -220,18 +222,18 @@
             
         },
         mounted() {
-            this.objData = this.value || {}
-            this.employerPostImages = [...this.objData.employerPostImages]
+            this.objDataJobPost = this.value || {}
+            this.employerPostImages = [...this.objDataJobPost.employerPostImages]
             
   // employerPostImages2 get upload file in component upload
-            this.employerPostImages2 = [...this.objData.employerPostImages]
+            this.employerPostImages2 = [...this.objDataJobPost.employerPostImages]
             
             if(!this.$route.params.id) {
-                this.objData.status = 2
+                this.objDataJobPost.status = EmployerPost.INACTIVE
                 this.listStatus = [
                     {
-                        status: 2,
-                        label: 'Inactive'
+                        status: EmployerPost.INACTIVE,
+                        label: 'cms_job_post_invalid'
                     }
                 ]
             }

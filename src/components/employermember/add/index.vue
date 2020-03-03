@@ -1,6 +1,5 @@
 <template>
 <div class="" v-if="this.objectData">
-    <el-form :model="objectData" :rules="rules" ref="form" class="mb-4">
         <section class="group-content-candidate__ha">
             <div class="d-flex align-items-center template-title ">
                 <i class="fas fa-bars mr-20"></i>
@@ -44,8 +43,8 @@
                                 <div class="col-9">
                                     <div class="content-candidate-right p-y-15">
                                         <div class="box-row rule justify-content-between">
-                                            <div class="text-normal w-100">
-                                                <input type="text" class="input-text__ha" placeholder="" v-model="objectData.companyName">
+                                            <div class="text-normal w-100" :class="{'is-invalid has-danger': $v.objectData.companyName.$dirty && $v.objectData.companyName.$invalid}">
+                                                    <el-input type="text"  placeholder="" v-model="objectData.companyName" @input="$v.objectData.companyName.$touch()"></el-input>
                                             </div>
                                         </div>
                                     </div>
@@ -143,28 +142,24 @@
                                             <div class="col-6">
                                                 <div class="group-rule-text">
                                                     <div class="name-title">{{$i('cms_employer_create_zipcode')}}</div>
-                                                    <div class="name-value w-100 d-flex align-items-center">
-                                                        <el-form-item prop="address.zipCode" :rules="{required: true, message: $i('Required'), trigger: 'blur'}">
-                                                            <el-select v-model="objectData.address.zipCode" filterable @focus="clearValidate('address.zipCode')" :placeholder="$i('Select')" :remote-method="remoteZipcode" remote>
+                                                    <div class="name-value w-100 d-flex align-items-center" :class="{'is-invalid has-danger': $v.objectData.address.zipCode.$dirty && $v.objectData.address.zipCode.$invalid}">
+                                                            <el-select v-model="objectData.address.zipCode" @input="$v.objectData.address.zipCode.$touch()" filterable :placeholder="$i('Select')" :remote-method="remoteZipcode" remote>
                                                                 <el-option value="-1" :label="$i('Select')"></el-option>
                                                                 <el-option v-for="objData in listZipCode" :key="objData.id" :label="objData.zipCode + ' - ' + objData.districtName + ' - ' + objData.townName" :value="objData.zipCode">
                                                                 </el-option>
                                                             </el-select>
-                                                        </el-form-item>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="group-rule-text">
                                                     <div class="name-title">{{$i('cms_employer_create_prefecture')}}</div>
-                                                    <div class="name-value w-100">
-                                                        <el-form-item prop="address.provinceId" :rules="{required: true, message: $i('Required'), trigger: 'blur'}">
-                                                            <el-select v-model="objectData.address.provinceId" filterable @focus="clearValidate('address.provinceId')" :placeholder="$i('Select')" remote>
+                                                    <div class="name-value w-100" :class="{'is-invalid has-danger': $v.objectData.address.provinceId.$dirty && $v.objectData.address.provinceId.$invalid}">
+                                                            <el-select v-model="objectData.address.provinceId" filterable @input="$v.objectData.address.provinceId.$touch()" :placeholder="$i('Select')" remote>
                                                                 <el-option value="-1" :label="$i('Select')"></el-option>
                                                                 <el-option v-for="objData in listProvinces" :key="objData.id" :label="objData.name" :value="objData.id">
                                                                 </el-option>
                                                             </el-select>
-                                                        </el-form-item>
                                                     </div>
                                                 </div>
                                             </div>
@@ -173,14 +168,12 @@
                                             <div class="col-6">
                                                 <div class="group-rule-text">
                                                     <div class="name-title">{{$i('cms_employer_create_city')}}</div>
-                                                    <div class="name-value w-100">
-                                                        <el-form-item prop="address.districtId" :rules="{required: true, message: $i('Required'), trigger: 'blur'}">
-                                                            <el-select v-model="objectData.address.districtId" filterable @focus="clearValidate('address.districtId')" :placeholder="$i('Select')" remote>
+                                                    <div class="name-value w-100" :class="{'is-invalid has-danger': $v.objectData.address.districtId.$dirty && $v.objectData.address.districtId.$invalid}">
+                                                            <el-select v-model="objectData.address.districtId" filterable @input="$v.objectData.address.districtId.$touch()" :placeholder="$i('Select')" remote>
                                                                 <el-option value="-1" :label="$i('Select')"></el-option>
                                                                 <el-option v-for="objData in listDistrict" :key="objData.id" :label="objData.name" :value="objData.id">
                                                                 </el-option>
                                                             </el-select>
-                                                        </el-form-item>
                                                     </div>
                                                 </div>
                                             </div>
@@ -198,10 +191,8 @@
                                             <div class="col-12">
                                                 <div class="group-rule-text">
                                                     <div class="name-title">{{$i('cms_employer_create_detail_address')}}</div>
-                                                    <div class="name-value w-100">
-                                                        <el-form-item prop="address.address" :rules="{required: true, message: $i('Required'), trigger: 'blur'}">
-                                                            <el-input type="text" class="" value="3 Chome 14-21 Noguchi Bld 2F" v-model="objectData.address.address"></el-input>
-                                                        </el-form-item>
+                                                    <div class="name-value w-100" :class="{'is-invalid has-danger': $v.objectData.address.address.$dirty && $v.objectData.address.address.$invalid}">
+                                                            <el-input type="text" class="" @input="$v.objectData.address.address.$touch()" value="3 Chome 14-21 Noguchi Bld 2F" v-model="objectData.address.address"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -210,20 +201,16 @@
                                             <div class="col-6">
                                                 <div class="group-rule-text">
                                                     <div class="name-title">{{$i('cms_employer_create_tel')}}</div>
-                                                    <div class="name-value w-100">
-                                                        <el-form-item prop="mobile" :rules="{required: true, message: $i('Required'), trigger: 'blur'}">
-                                                            <el-input type="number" class="" v-model="objectData.mobile"></el-input>
-                                                        </el-form-item>
+                                                    <div class="name-value w-100" :class="{'is-invalid has-danger': $v.objectData.mobile.$dirty && $v.objectData.mobile.$invalid}">
+                                                            <el-input type="number" class="" v-model="objectData.mobile" @input="$v.objectData.mobile.$touch()"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="group-rule-text">
                                                     <div class="name-title">{{$i('cms_employer_create_fax')}}</div>
-                                                    <div class="name-value w-100">
-                                                        <el-form-item prop="fax" :rules="{required: true, message: $i('Required'), trigger: 'blur'}">
-                                                            <el-input type="number" class="" v-model="objectData.fax"></el-input>
-                                                        </el-form-item>
+                                                    <div class="name-value w-100" :class="{'is-invalid has-danger': $v.objectData.fax.$dirty && $v.objectData.fax.$invalid}">
+                                                            <el-input type="number" class="" v-model="objectData.fax" @input="$v.objectData.fax.$touch()"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -421,9 +408,8 @@
                                     </div>
                                 </div>
                                 <div class="col-9">
-                                    <div class="content__job-detail__right p-y-15">
-                                        <tiny-mce :height="450" v-model="objectData.businessDescription" @change="objectData.businessDescription = $event"></tiny-mce>
-                                        <span class="help erorr-text" v-show="checkDescription">{{ $i('Required') }}</span>
+                                    <div class="content__job-detail__right p-y-15" :class="{'is-invalid has-danger': $v.objectData.businessDescription.$dirty && $v.objectData.businessDescription.$invalid}">
+                                        <tiny-mce :height="450" v-model="objectData.businessDescription" @change="objectData.businessDescription = $event" @input="$v.objectData.businessDescription.$touch()"></tiny-mce>
                                     </div>
                                 </div>
                             </div>
@@ -466,10 +452,8 @@
                                         <div class="box-row rule">
                                             <div class="row w-100">
                                                 <div class="col">
-                                                    <div class="texts w-100">
-                                                        <el-form-item prop="email" :rules="{required: true, message: $i('Required'), trigger: 'blur'}">
-                                                            <el-input type="email" class="" value="" v-model="objectData.email"></el-input>
-                                                        </el-form-item>
+                                                    <div class="texts w-100" :class="{'is-invalid has-danger': $v.objectData.email.$dirty && $v.objectData.email.$invalid}">
+                                                            <el-input type="email" class="" value="" v-model="objectData.email" @input="$v.objectData.email.$touch()"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -493,10 +477,8 @@
                                         <div class="box-row rule">
                                             <div class="row w-100">
                                                 <div class="col">
-                                                    <div class="texts w-100">
-                                                        <el-form-item prop="password" :rules="{required: true, message: $i('Required'), trigger: 'blur'}">
-                                                            <el-input type="password" class="" value="" v-model="objectData.password"></el-input>
-                                                        </el-form-item>
+                                                    <div class="texts w-100" :class="{'is-invalid has-danger': $v.objectData.password.$dirty && $v.objectData.password.$invalid}">
+                                                            <el-input type="password" class="" value="" v-model="objectData.password" @input="$v.objectData.password.$touch()"></el-input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -571,34 +553,9 @@
                 </div>
             </div>
             <el-dialog :visible.sync="changePass" width="30%">
-                <div class="row ">
-                    <div class="col-12">
-                        <div class="mb-2 text-font-20 text-center"> {{$i('cms_employer_change_passWord')}}</div>
-                    </div>
-                    <div class="col-12" :class="{'is-invalid has-danger': $v.newPass.$dirty && $v.newPass.$invalid}">
-                        {{$i('cms_employer_create_password')}}
-                        <el-input type="password" class="change_password" value="" v-model="newPass" @input="$v.newPass.$touch()"></el-input>
-                    </div>
-                     <div class="col-12" :class="{'is-invalid has-danger': $v.confirmPass.$dirty && $v.confirmPass.$invalid}">
-                         {{$i('cms_employer_create_confirm_password ')}}
-                            <el-input type="password" class="change_password" value="" v-model="confirmPass" @input="$v.confirmPass.$touch()"></el-input>
-                    </div>
-                </div>
-                <div class="row display-flex mt-5">
-                    <div class="col-12">
-                        <div class=" list-btn__ha text-center">
-                            <div class="item-btn">
-                                <input class="btn width-120 text-white btn-list-view bg-27ACCE" type="button" @click="changePassWord" :value="$i('cms_execute')" />
-                            </div>
-                            <div class="item-btn">
-                                <input class="btn width-120 text-white btn-list-view bg-cancel" type="button" @click="changePass = false" :value="$i('Cancel')" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               <changePassWord v-model="objDataPass" @close="changePass=false" @changePass="changePassWord"></changePassWord>
             </el-dialog>
         </section>
-    </el-form>
 </div>
 </template>
 
@@ -617,13 +574,36 @@ import {
 } from 'vuelidate/lib/validators'
 import Vuelidate from 'vuelidate'
 import Vue from 'vue'
-
+import {
+    EmployerSection,
+    EmployerStatus
+} from '../../../types/enum'
+import changePassWord from '../modal/changepassword'
 Vue.use(Vuelidate)
+const mustBeMobile = function(value) {
+    return this.formatMobile(value)
+} 
+const mustBeNotText = function(value) {
+    return this.formatText(value)
+} 
+const isEdit = function(value) {
+    if(this.$route.params.id){
+        return true;
+    }
+    else{
+        if(value){
+            return true
+        }
+    }
+    return false
+} 
 export default {
     data() {
         return {
-            newPass:null,
-            confirmPass:null,
+            objDataPass:{
+                newPass: null,
+                confirmPass: null,
+            },     
             changePass: false,
             money: {
                 decimal: ',',
@@ -641,13 +621,13 @@ export default {
                 pageSize: 9999
             },
             listSection: [{
-                    id: 1,
+                    id: EmployerSection.PUBLIC,
                     label: 'cms_employer_list_public',
                     status: 'public',
                     class: 'btn__pill__green'
                 },
                 {
-                    id: 0,
+                    id: EmployerSection.PRIVATE,
                     label: 'cms_employer_list_private',
                     status: 'private',
                     class: 'btn__pill__red'
@@ -655,13 +635,13 @@ export default {
 
             ],
             listStatus: [{
-                    id: 2,
+                    id: EmployerStatus.UNCONFIRM,
                     label: 'cms_employer_list_unconfirm',
                     status: 'UNCONFIRM',
                     class: 'btn__pill__green'
                 },
                 {
-                    id: 1,
+                    id: EmployerStatus.ACTIVE,
                     label: 'cms_employer_list_active',
                     status: 'ACTIVE',
                     class: 'btn__pill__red'
@@ -699,18 +679,49 @@ export default {
         },
 
     },
-validations: {
-        newPass: {
-            required,
-        },
-        confirmPass: {
-            sameAs: sameAs('newPass')
+    validations: {
+        objectData:{
+            companyName:{
+                required
+            },
+            businessDescription:{
+                required
+            },
+            mobile:{
+                required,mustBeMobile,mustBeNotText
+            },
+            fax:{
+                required,mustBeMobile,mustBeNotText
+            },
+            email:{
+                required,
+                email
+            },
+            password:{
+                // required,
+                isEdit
+            },
+            address:{
+                provinceId:{
+                    required
+                },
+                districtId:{
+                    required
+                },
+                zipCode:{
+                    required
+                },
+                address:{
+                    required
+                }
+            },
         }
     },
     components: {
         Money,
         UploadImage: () => import('../../_common/upload'),
-        Upload: () => import('../../_common/compress-file')
+        Upload: () => import('../../_common/compress-file'),
+        changePassWord
     },
     watch: {
         'employerPostImages'(value) {
@@ -755,7 +766,7 @@ validations: {
         }
     },
     methods: {
-        ...mapActions(['getListZipCode', 'getListProvince', 'searchListDistrict','updatePass']),
+        ...mapActions(['getListZipCode', 'getListProvince', 'searchListDistrict', 'updatePass']),
         getImg(value) {
             this.employerImages = value
         },
@@ -832,8 +843,12 @@ validations: {
         },
 
         confirm() {
-            this.check()
-            if (this.checkVali) {
+             let invalid = this.$v.$invalid;
+                if (invalid) {
+                    this.$v.$touch();
+                    this.$message(this.$i('cms_job_post_enter_required_fields'), 'warning');
+                    return;
+                }
                 if (!this.$route.params.id) {
                     if (this.objectData.password === this.confirmPassword) {
                         this.$emit('create', this.objectData)
@@ -845,60 +860,33 @@ validations: {
                     this.$emit('create', this.objectData)
                     this.onTabClick(2)
                 }
-            }
-        },
-        changePassWord() {
-                if (this.$route.params.id) {
-                    let invalid = this.$v.$invalid;
-            if (invalid) {
-                this.$v.$touch();
-                this.type = 'error';
-                this.message =  "Check required"
-                return;
-            }
-                    if (this.newPass === this.confirmPass) {
-                        let objConfirm = {
-                                memberId: this.$route.params.id,
-                                password: this.newPass
-                            }
-                        this.updatePass(objConfirm)
-                            .then(res => {
-                                 this.$message(this.$i('Successful'));
-                                 this.changePass = false
-                            })
-                            .catch(err => {
-                                 this.$message(this.$i(err.message),'error');
-                            })
-                                }
-                }
         },
         resetFilters() {
             this.$emit('resetFilters');
 
         },
-        //validate
-        check() {
-            var vali = false
-            this.checkDescription = false
-            if (!this.objectData.businessDescription) this.checkDescription = true
-            this.$refs['form'].validate((valid) => {
-                if (valid) {
-                    vali = true;
-                } else {
-                    vali = false;
-                }
-            });
-            if (!vali || this.checkDescription) {
-                this.checkVali = false
+          changePassWord() {
+            let invalid = this.$v.$invalid;
+            if (invalid) {
+                this.$v.$touch();
                 this.$message(this.$i('cms_job_post_enter_required_fields'), 'warning');
-            } else {
-                this.checkVali = true
+                return;
             }
-        },
-        clearValidate(type) {
-            return this.$refs.form.clearValidate(type)
-        },
-
+            if (this.newPass === this.confirmPass) {
+                let objConfirm = {
+                    memberId: this.$route.params.id,
+                    password: this.objDataPass.newPass
+                }
+                this.updatePass(objConfirm)
+                  .then(res => {
+                        this.$message(this.$i('Successful'));
+                        this.changePass = false
+                        })
+                    .catch(err => {
+                        this.$message(this.$i(err.message),'error');;
+                        })
+                    }
+                }
     },
     created() {
 
@@ -935,7 +923,8 @@ validations: {
 .input-text__ha::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
-.text_changePassword{
+
+.text_changePassword {
     cursor: pointer;
 }
 </style>

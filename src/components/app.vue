@@ -1,12 +1,12 @@
 ﻿<template>
-    <div id="app-full" >
-        <div id="wrapper" v-if="currentUser">
+    <div id="app-full" v-if="currentUser">
+        <div id="wrapper">
             <!-- HEADER -->
             <header id="header" class="site-header-fix">
                 <div class="row m-0 p-0-35">
                     <div class="col-3 p-0 ">
                         <a href="#" class="ml-5">
-                            <img src="../../src/assets/images/laboro.png" alt="logo">
+                            <img src="../assets/images/laboro.png" alt="logo">
                         </a>
                     </div>
                     <div class="col-9 d-flex justify-content-between align-items-center p-0 ">
@@ -16,7 +16,7 @@
                             <a class="avatar dropdown-toggle nav-link arrow-none waves-effect nav-user"
                                data-toggle="dropdown" href="javascript:;" role="button" aria-haspopup="false"
                                aria-expanded="false" @click="showMenuUser = !showMenuUser">
-                                <img src="../../src/assets/images/laboro.png" alt="avatar">
+                                <img src="../assets/images/laboro.png" alt="avatar">
                                 <!--                  <avatar id="current_member_avatar" style="" slot="right"-->
                                 <!--                          :username="currentUser.fullName == null ? 'M' : currentUser.fullName"-->
                                 <!--                          :src="currentUser.avatar" :size="40"></avatar>-->
@@ -73,16 +73,8 @@
                 </div>
             </div>
         </modal>
-        <!-- <notifications group="foo"/> -->
-    
-    
-    
-    
-    
-    
-    <p>nhanpt</p>
+        <notifications group="foo"/>
     </div>
-    
 </template>
 <script>
     import {mapGetters, mapActions} from 'vuex';
@@ -92,7 +84,6 @@
     
     let menuMode = '';
     if (typeof (localStorage) !== 'undefined') {
-        console.log(localStorage);
         try {
             menuMode = localStorage.getItem(CONSTANTS.MENU_MODE) || '';
         } catch (e) {
@@ -122,9 +113,6 @@
                 menuMode: menuMode,
                 windowWidth: 0,
             }
-        },
-        created(){
-            
         },
         watch: {
             'menuMode'() {

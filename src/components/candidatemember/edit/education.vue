@@ -27,7 +27,7 @@
                           :placeholder="$i('Select')"
                         >
                           <el-option
-                            v-for="(v,i) in national"
+                            v-for="(v,i) in memberLanguage"
                             :key="v.id"
                             :label="v.name"
                             :value="v.id">
@@ -360,7 +360,7 @@
       }
     },
     computed: {
-      ...mapGetters(['workingCategory', 'learningCategory', 'japaneseCertification', 'memberLanguage', 'national', 'languageLevel'])
+      ...mapGetters(['workingCategory', 'learningCategory', 'japaneseCertification', 'memberLanguage', 'languageLevel'])
     },
     methods: {
       nextTab() {

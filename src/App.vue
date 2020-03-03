@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
     <img alt="Vue logo" src="./assets/images/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>

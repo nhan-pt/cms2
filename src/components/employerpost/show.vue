@@ -1,13 +1,29 @@
 <template>
-        <div v-if="objData" class="template w-100 bg-white position-relative">
+        <div v-if="objDataJobPost" class="template w-100 bg-white position-relative">
             <div class="d-flex align-items-center template-title ">
                 <i class="fas fa-bars mr-20"></i>
                 <p class="m-0">{{$i('cms_job_post_detail_title')}}</p>
             </div>
-            <div class="template-content">
+            <div class="template-content">  
+                <div class="panelhead-candidate__ha_back mb-3">
+                  <div class="list-btn__ha">
+                      <div class="item-btn">
+                      <a href="javascript:;" class="text-links bg-purple" @click="edit">
+                          {{$i('Edit')}} </a>
+                      </div>
+                      <div class="item-btn">
+                      <a href="javascript:;" class="text-links bg-f53345" @click="deleteEvent">
+                          {{$i('Delete')}} </a>
+                      </div>
+                      <div class="item-btn">
+                      <a href="javascript:;" class="text-links btn-cancels" @click="back">
+                          {{$i('Cancel')}} </a>
+                      </div>
+                </div>
+              </div>
                 <div class="row d-flex justify-content-between mb-4">
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
-                        <button v-if="(objData.status!=1 && objData.status!=3)" class=" btn-publish bg-darkgreen" @click="updateStatus">{{$i('publish_this_job_post')}}</button>
+                        <button v-if="(objDataJobPost.status!=ACTIVE && objDataJobPost.status!=EXPIRED)" class=" btn-publish bg-darkgreen" @click="updateStatus">{{$i('publish_this_job_post')}}</button>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                         <button class=" btn-publish bg-orange"  @click="sameJob">{{$i('create_a_same_jobpost')}}</button>
@@ -36,7 +52,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="p-20-0">
-                                            <p>{{objData.title}}</p>
+                                            <p>{{objDataJobPost.title}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -49,7 +65,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="p-20-0">
-                                            <p>{{objData.shopName}}</p>
+                                            <p>{{objDataJobPost.branchName}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -66,27 +82,27 @@
                                             <div class="row">
                                               <div class="col-4">
                                                 {{$i('Zipcode')}}:
-                                                <span class="text-normal">{{objData.zipCode}}</span>
+                                                <span class="text-normal">{{objDataJobPost.zipCode}}</span>
                                               </div>
                                               <div class="col-8">
                                                 {{$i('prefectures')}}:
-                                                <span class="text-normal">{{objData.provinceName}}</span>
+                                                <span class="text-normal">{{objDataJobPost.provinceName}}</span>
                                               </div>
                                             </div>
                                             <div class="row">
                                               <div class="col-4">
                                                 {{$i('city')}}:
-                                                <span class="text-normal">{{objData.districtName}}</span>
+                                                <span class="text-normal">{{objDataJobPost.districtName}}</span>
                                               </div>
                                               <div class="col-4">
                                                 {{$i('Village')}}:
-                                                  <span class="text-normal">{{objData.townName}}</span>
+                                                  <span class="text-normal">{{objDataJobPost.townName}}</span>
                                               </div>
                                             </div>
                                             <div class="row">
                                               <div class="col-12">
                                                 {{$i('Address')}}:
-                                                <span class="text-normal">{{objData.address}}</span>
+                                                <span class="text-normal">{{objDataJobPost.address}}</span>
                                               </div>
                                             </div>
                                         </div>
@@ -101,7 +117,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="job-detail row p-20-0">
-                                            <div class="col-12" v-for="(e,i) in objData.stations" :key="i">
+                                            <div class="col-12" v-for="(e,i) in objDataJobPost.stations" :key="i">
                                                 <div class="row">
                                                     <div class="col-md-2">{{e.stationName}}</div>
                                                     <div class="col-md-3">{{e.trainLineName}}</div>
@@ -120,7 +136,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="p-20-0">
-                                            <p>{{objData.jobTypeName}}</p>
+                                            <p>{{objDataJobPost.jobTypeName}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +149,7 @@
                                     </div>
                                     <div class="col-9">
                                         <div class="p-20-0">
-                                          <div v-html="objData.description"></div>
+                                          <div v-html="objDataJobPost.description"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +162,7 @@
                                     </div>
                                     <div class="col-9">
                                       <div class="p-20-0">
-                                        <div v-html="objData.requirements"></div>
+                                        <div v-html="objDataJobPost.requirements"></div>
                                       </div>
                                     </div>
                                 </div>
@@ -165,7 +181,7 @@
                             </div>
                             <div class="col-9">
                               <div class="p-20-0 d-flex justify-content-between">
-                                <p>{{objData.jobModelName}}</p>
+                                <p>{{objDataJobPost.jobModelName}}</p>
                               </div>
                             </div>
                           </div>
@@ -178,7 +194,7 @@
                             </div>
                             <div class="col-9">
                               <div class="p-20-0 d-flex justify-content-between">
-                                <p>{{objData.japaneseCertificationName}}</p>
+                                <p>{{objDataJobPost.japaneseCertificationName}}</p>
                               </div>
                             </div>
                           </div>
@@ -190,7 +206,7 @@
                             </div>
                             <div class="col-9">
                               <div class="job-detail p-20-0">
-                                <div class="row" v-for="(e,i) in objData.shiftJobInPosts" :key="i">
+                                <div class="row" v-for="(e,i) in objDataJobPost.shiftJobInPosts" :key="i">
                                   <div class="col-3">
                                     <p>{{e.name}}</p>
                                   </div>
@@ -210,7 +226,7 @@
                             </div>
                             <div class="col-9">
                               <div class="job-detail row p-20-0" >
-                                <div class="col-2" v-for="(e,i) in objData.hiringDates" :key="i">
+                                <div class="col-2" v-for="(e,i) in objDataJobPost.hiringDates" :key="i">
                                   <p>{{e.name}}</p>
                                 </div>
                               </div>
@@ -225,7 +241,7 @@
                             </div>
                             <div class="col-9">
                               <div class="p-20-0">
-                                <p>{{objData.workingDayName}}</p>
+                                <p>{{objDataJobPost.workingDayName}}</p>
                               </div>
                             </div>
                           </div>
@@ -238,7 +254,7 @@
                             </div>
                             <div class="col-9">
                               <div class="p-20-0">
-                                <p>{{objData.workingHourPerDay}}</p>
+                                <p>{{objDataJobPost.workingHourPerDay}}</p>
                               </div>
                             </div>
                           </div>
@@ -254,7 +270,7 @@
                                 <div class="job-detail">
                                   <div>
                                     <label class="text-normal">
-                                      {{objData.salaryTypeName}} {{formatPrice(objData.salary)}} {{$i('yenOrMore')}}
+                                      {{objDataJobPost.salaryTypeName}} {{formatPrice(objDataJobPost.salary)}} {{$i('yenOrMore')}}
                                     </label>
                                   </div>
                                 </div>
@@ -272,7 +288,7 @@
                               <div class="p-20-0">
                                 <div class="job-detail d-flex justify-content-between">
                                   <label for="" class="text-normal">
-                                    {{objData.paymentMethodName}}
+                                    {{objDataJobPost.paymentMethodName}}
                                   </label>
                                 </div>
                               </div>
@@ -287,7 +303,7 @@
                             </div>
                             <div class="col-9">
                               <div class="p-20-0 d-flex justify-content-between">
-                                <p>{{objData.regimes.map(i=>i.name).join(' , ')}}</p>
+                                <p>{{objDataJobPost.regimes.map(i=>i.name).join(' , ')}}</p>
                               </div>
                             </div>
                           </div>
@@ -300,7 +316,7 @@
                             </div>
                             <div class="col-9">
                               <div class="p-20-0 d-flex justify-content-between">
-                                <p>{{objData.tags}}</p>
+                                <p>{{objDataJobPost.tags}}</p>
                               </div>
                             </div>
                           </div>
@@ -423,7 +439,7 @@
                                   </a>
                                 </div>
                                 <div class="upload-block">
-                                  <div class="upload-image" v-for="(e,i) in objData.employerPostImages" :key="e.id">
+                                  <div class="upload-image" v-for="(e,i) in objDataJobPost.employerPostImages" :key="e.id">
                                     <img :src="e.image">
                                   </div>
                                 </div>
@@ -442,11 +458,11 @@
                             <div class="row p-20-0">
                               <div class="col-6">
                                 <label for="" class="text-normal">{{$i('cms_posting_date')}}</label>
-                                  {{formatDate(objData.startDate)}}
+                                  {{formatDate(objDataJobPost.startDate)}}
                               </div>
                               <div class="col-6">
                                 <label for="" class="text-normal">{{$i('cms_closing_date')}}</label>
-                                {{formatDate(objData.endDate)}}
+                                {{formatDate(objDataJobPost.endDate)}}
                               </div>
                             </div>
                           </div>
@@ -460,7 +476,7 @@
                           </div>
                           <div class="col-9">
                             <div class="row p-20-0">
-                              <div class="col-6" v-for="e in listStatus" v-if="e.id == objData.status">
+                              <div class="col-6" v-for="e in listStatus" v-if="e.id == objDataJobPost.status">
                                   {{$i(e.status)}}
                               </div>
                             </div>
@@ -471,7 +487,7 @@
                     </div>
                     <div class="row d-flex justify-content-between mb-4">
                       <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
-                        <button v-if="(objData.status!=1 && objData.status!=3)" class=" btn-publish bg-darkgreen" @click="updateStatus">{{$i('publish_this_job_post')}}</button>
+                        <button v-if="(objDataJobPost.status!=ACTIVE && objDataJobPost.status!=EXPIRED)" class=" btn-publish bg-darkgreen" @click="updateStatus">{{$i('publish_this_job_post')}}</button>
                       </div>
                       <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12">
                         <button class=" btn-publish bg-orange" @click="sameJob">{{$i('create_a_same_jobpost')}}</button>
@@ -484,14 +500,10 @@
 
 <script>
     import {mapActions, mapGetters,} from 'vuex'
-    import {Tabs, TabPane} from 'element-ui'
-    import 'element-ui/lib/theme-chalk/tabs.css';
-    import 'element-ui/lib/theme-chalk/tab-pane.css';
-
+    import {
+        EmployerPost
+    } from '../../types/enum';
     export default {
-        components: {
-            Tabs, TabPane
-        },
         data() {
             return {
                 listTab: [
@@ -513,25 +525,23 @@
                     },
                     
                 ],
+                ACTIVE:EmployerPost.ACTIVE,
+                EXPIRED:EmployerPost.EXPIRED,
                 listStatus: [
                     {
-                        id: 0,
-                        status: 'Deleted'
-                    },
-                    {
-                        id: 1,
+                        id: EmployerPost.ACTIVE,
                         status: 'Active'
                     },
                     {
-                        id: 2,
-                        status: 'Inactive'
+                        id: EmployerPost.INACTIVE,
+                        status: 'cms_job_post_invalid'
                     },
                     {
-                        id: 3,
+                        id: EmployerPost.EXPIRED,
                         status: 'Expired'
                     },
                     {
-                        id: 4,
+                        id: EmployerPost.NONPOSTING,
                         status: 'Non-posting'
                     }
                 ],
@@ -541,15 +551,14 @@
                 applyId: 3,
                 listApply: null,
                 interviewInformation: {},
-                objData: {
+                objDataJobPost: {
                     provinceId: 0,
                     districtId: 0,
                     stationId: 0,
                     shiftJobInPosts: [],
                     regimes: null,
                     tagIds: [],
-                    censorship: null,
-                    status: 1,
+                    censorship: null
                 },
                 activeName: 'ja',
                 languages: null,
@@ -563,15 +572,18 @@
         computed: {
         },
         methods: {
-            ...mapActions(['getDetailEmployerPost', 'listApplyEmployer', 'updateStatusDetailEmployerPost']),
+            ...mapActions(['getDetailEmployerPost', 'listApplyEmployer', 'updateStatusDetailEmployerPost','deleteEmployerPost']),
             sameJob() {
                 return this.$router.push('/employerpost/create-same/' + this.employerPostId);
+            },
+            back() {
+              this.$router.push('/employerpost')
             },
             updateStatus() {
                 let confirm = 'DoYouWantToChangeStatus'
                 let dataSave = {
                     employerPostId: this.employerPostId,
-                    status: 1
+                    status: EmployerPost.ACTIVE
                 }
                 this.$confirm(this.$i(confirm)).then(() => {
                     this.updateStatusDetailEmployerPost(dataSave)
@@ -591,16 +603,33 @@
                 this.listTab[item].status = 'active'
                 this.tabActive = this.listTab[item].label
             },
+            edit() {
+              return this.$router.push('/employerpost/edit/' + this.$route.params.id);
+            },
+            deleteEvent() {
+                let id = this.$route.params.id
+                this.$confirm(this.$i('DoYouWantDeleteEmployerPost')).then(() => {
+                    this.deleteEmployerPost(id)
+                        .then(() => {
+                            this.$message(this.$i('Successful'));
+                            return this.$router.push('/employerpost');
+
+                        })
+                        .catch(err => {
+                            this.$error(err.message);
+                        })
+                })
+            },
             getDetail() {
                 let loading = this.$loading.show();
                 this.getDetailEmployerPost({id: this.employerPostId})
                     .then(res => {
                         loading.hide();
-                        this.objData = res.data;
-                        this.objData.langs = this.objData.langs.filter(i => i.languageCode != this.currentLanguage);
-                        this.objData.tags = Array.isArray(this.objData.tags) ? this.objData.tags.map(i => i.name).join(", ") : null;
+                        this.objDataJobPost = res.data;
+                        this.objDataJobPost.langs = this.objDataJobPost.langs.filter(i => i.languageCode != this.currentLanguage);
+                        this.objDataJobPost.tags = Array.isArray(this.objDataJobPost.tags) ? this.objDataJobPost.tags.map(i => i.name).join(", ") : null;
                         this.employerPostImages = res.data.employerPostImages;
-                        this.interviewInformation = this.objData.interviewInformation
+                        this.interviewInformation = this.objDataJobPost.interviewInformation
                         
                     })
                     .catch(err => {

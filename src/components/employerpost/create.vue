@@ -23,7 +23,7 @@
                             </div>
                         </div>
                     </div>
-                    <basicInfo v-model="objData" @dataBasicInfo="getDataBasicInfo" @nextTab="nextTab" @confirmTab="clickTab(5)">
+                    <basicInfo v-model="objDataJobPost" :sameLocation="sameLocation" @dataBasicInfo="getDataBasicInfo" @nextTab="nextTab" @confirmTab="clickTab(5)">
                     </basicInfo>
                 </div>
                 <div v-if="currentTab.tabId == 2" class="tab-pane fade show active">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                    <hiringCondition v-model="objData" @nextTab="nextTab" @previousTab="previousTab" @confirmTab="clickTab(5)"/>
+                    <hiringCondition v-model="objDataJobPost" @nextTab="nextTab" @previousTab="previousTab" @confirmTab="clickTab(5)"/>
                 </div>
                 <div v-if="currentTab.tabId == 3" class="tab-pane fade show active">
                     <div class="row">
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                     </div>
-                    <interviewSetting v-model="objData" @dataInterview="getlistDataInterview" @previousTab="previousTab" @nextTab="nextTab" @confirmTab="clickTab(5)"/>
+                    <interviewSetting v-model="objDataJobPost" @dataInterview="getlistDataInterview" @previousTab="previousTab" @nextTab="nextTab" @confirmTab="clickTab(5)"/>
                 </div>
                 <div v-if="currentTab.tabId == 4" class="tab-pane fade show active">
                     <div class="row">
@@ -54,10 +54,10 @@
                             </div>
                         </div>
                     </div>
-                    <posting v-model="objData" @previousTab="previousTab" @confirmTab="clickTab(5)"/>
+                    <posting v-model="objDataJobPost" @previousTab="previousTab" @confirmTab="clickTab(5)"/>
                 </div>
                 <div v-if="currentTab.tabId == 5" class="tab-pane fade show active">
-                    <confirm v-model="objData" :listDataBasicInfo="listDataBasicInfo" @save="add" :listDataInterview="listDataInterview" @tab="editTab" />
+                    <confirm v-model="objDataJobPost" :listDataBasicInfo="listDataBasicInfo" @save="add" :listDataInterview="listDataInterview" @tab="editTab" />
                 </div>
             </div>
             
@@ -107,7 +107,19 @@
                         status: 'deactive'
                     }
                 ],
-                objData: {
+                 sameLocation: {
+                zipCode: null,
+                provinceId: null,
+                districtId: null,
+                address: null,
+                townName: null,
+                stations: [{
+                    stationId: null,
+                    description: '',
+                }],
+
+            },
+                objDataJobPost: {
                     status: 2,
                     tagIds: [],
                     regimeIds: [],
@@ -121,6 +133,7 @@
                         }
                     ],
                     interviewInformation: {
+                        sameAddress:false,
                         districtId: null,
                         provinceId: null,
                         stations: [
@@ -151,6 +164,8 @@
                             endWorking: null
                         }
                     ],
+                    branchId: null,
+                    sameAddress:false
                 },
                 listDataInterview: null,
                 listDataBasicInfo: null,
@@ -205,13 +220,13 @@
                 document.documentElement.scrollTop = 0;
             },
             add() {
-                let dataAdd = {...this.objData};
+                let dataAdd = {...this.objDataJobPost};
                 let checkInsert = true;
                 dataAdd.shiftJobInPosts = dataAdd.shiftJobInPosts.filter(e => e.shiftJobId > 0)
                 dataAdd.interviewInformation.interviewScheduleSuggests = dataAdd.interviewInformation.interviewScheduleSuggests.filter(e => e.interviewDateId > 0)
                 dataAdd.interviewInformation.stations = dataAdd.interviewInformation.stations.filter(e => e.stationId > 0)
                 
-                let listObj = ['shopName', 'memberId', 'title', 'description', 'provinceId', 'districtId', 'zipCode', 'address', 'workingDayId', 'salary', 'salaryTypeId', 'endDate', 'startDate']
+                let listObj = ['branchId', 'memberId', 'title', 'description', 'provinceId', 'districtId', 'zipCode', 'address', 'workingDayId', 'salary', 'salaryTypeId', 'endDate', 'startDate']
                 let listArray = ['stations', 'shiftJobInPosts', 'employerPostImages']
                 let textError = ''
                 for(let i of listObj ) {

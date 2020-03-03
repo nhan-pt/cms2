@@ -333,27 +333,32 @@ export default {
       }, 200);
     },
     insertCandidate(data) {
+      let loading = this.$loading.show();
       this.createCandidate(data).then((res) => {
         if (res.success) {
           this.$message(this.$i('Successful'));
+          loading.hide();
         }
         setTimeout(() => {
           this.$router.push('/candidatemember');
         }, 1500)
       }).catch(err => {
+        loading.hide();
         this.$message(err.message, 'error');
       })
     },
     updateCandidateMember(data) {
-      console.log(data)
+      let loading = this.$loading.show();
       this.updateCandidate(data).then((res) => {
         if (res.success) {
+          loading.hide();
           this.$message(this.$i('Successful'));
         }
         setTimeout(() => {
           this.$router.push('/candidatemember');
         }, 1500)
       }).catch(err => {
+        loading.hide();
         this.$message(err.message, 'error');
       })
     }

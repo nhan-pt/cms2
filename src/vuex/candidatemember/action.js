@@ -158,21 +158,20 @@ export const saveTab = ({ commit }, data) => {
 };
 export const resetCandidate = ({ commit }, data) => {
     return commit('RESET_SEARCH_CANDIDATE', {
-        params: {
-            pageSize: 10,
-            pageIndex: 1,
-            searchKey: null,
-            phone: null,
-            isAvailable: -1,
-            birthDate: null,
-            katakana: null,
-            name: null,
-            provinceId: null,
-            districtId: null,
-            stationIds: [],
-            japaneseSkill: [],
-            resident: null,
-            gender: null
-        },
+        pageSize: 10,
+        pageIndex: 1,
+        searchKey: null,
+        phone: null,
+        isAvailable: -1,
+        birthDate: null,
+        katakana: null,
+        name: null,
+        provinceId: null,
+        districtId: null,
+        stationIds: [],
+        japaneseSkill: [],
+        resident: null,
+        gender: null
+
     });
 };

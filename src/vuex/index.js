@@ -1,6 +1,6 @@
 ﻿import Vue from 'vue'
 import Vuex from 'vuex'
-
+import {app} from '../main'
 
 var modules = {};
 var context = require.context(".", true, /store\.js$/);

@@ -88,18 +88,7 @@ import 'vue-loading-overlay/dist/vue-loading.min.css';
      Loading = require('vue-loading-overlay');
 // }
 // add google map
-import 'vue-googlemaps/dist/vue-googlemaps.css'
-import VueGoogleMapsa from 'vue-googlemaps'
-// Vue.use(VueGoogleMaps, {
-//     load: {
-//         // Google API key
-//         apiKey: 'AIzaSyD6-oe8iHcuEowYjeB9uGI6LKNb5r3D9z0',
-//         // Enable more Google Maps libraries here
-//         libraries: ['places'],
-//         // Use new renderer
-//         useBetaRenderer: false,
-//     },
-// })
+
 import * as VueGoogleMaps from "vue2-google-maps";
 
 Vue.use(VueGoogleMaps, {

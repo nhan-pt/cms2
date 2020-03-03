@@ -1,3 +1,15 @@
+
+@import "./style/style.css";
+@import "./style/custom.css"; 
+
+@import "./style/vendor/animate.css";
+@import "./style/vendor/animate.min.css";
+@import "./style/vendor/bootstrap.min.css";
+@import "./style/vendor/fontawesome-all.min.css";
+@import "./style/vendor/icons.css";
+@import "./style/vendor/metismenu.min.css";
+@import "./style/vendor/progress-bar.css";
+@import "./style/vendor/vue2-animate.min.css";
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
 

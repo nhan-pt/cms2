@@ -23,17 +23,22 @@
                        filterable
                        clearable
                        :remote-method="remoteMember"
-                       :placeholder="$i('Member')">
+                       :placeholder="$i('cms_employer_list_employer')">
                     <el-option
                         v-for="item in listMember"
                         :key="item.id"
-                        :label="item.loginEmail"
-                        :value="item.id">
+                        :label="item.companyName"
+                        :value="item.id" 
+                        :title="TitleCompany(item)"
+                        >
                     </el-option>
                 </el-select>
             </div>
             <div class="col-md-6 col-lg-3 col-12">
-                <input class="form-control input-search-2" :placeholder="$i('cms_job_post_input_search_location')" v-model="objData.shopName" disabled="disabled">
+                <el-select v-model="objData.branchId" remote clearable filterable :placeholder="$i('cms_job_post_input_search_location')">
+                    <el-option v-for="item in listBranch" :key="item.id" :label="item.name" :value="item.id" :title="TitleBranch(item)">
+                    </el-option>
+                </el-select>
             </div>
             <div class="col-md-6 col-lg-3 col-12">
                 <input class="form-control input-search-2" :placeholder="$i('cms_job_post_input_min_saraly')" type="number" v-model="objData.minSalary">
@@ -145,53 +150,128 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if="listApply.length" v-for="(v, k) in listApply" :key="k">
+                            <tr v-if="listApply.length" v-for="(v, k) in listApply" :key="k" >
                                 <td class="fixed-left-row">
-                                    <a href="javascript:;" @click="redirect(v.employerPostId, v.memberId)">{{v.id}}</a>
+                                    <a href="javascript:;" @click="redirect(v.id)">{{v.id}}</a>
                                     
                                 </td>
-                                <td>
+                                <td class="position-relative">
                                     <div class="td-nowrap"  :title="formatDate(v.createdDate)">
-                                        <a href="javascript:;" @click="redirect(v.employerPostId, v.memberId)">{{formatDate(v.createdDate)}}</a>
+                                        <a href="javascript:;" @click="redirect(v.id)">{{formatDate(v.createdDate)}}</a>
+                                    </div>
+                                    <div class="td-nowrap"  :title="formatDate(v.startedWorkDate)" v-if="v.startedWorkDate">
+                                        <a href="javascript:;" @click="onToolTip(v.id, TransactionTypeId.IN)" :class="{'text-green':v.startedWorkDate }">
+                                            <i class="far fa-check-circle"></i>{{formatDate(v.startedWorkDate)}} <i class="fas fa-yen-sign"></i>
+                                        </a>
+                                    </div>
+                                    <div class="td-nowrap"  :title="formatDate(v.leavedDate)" v-if="v.leavedDate">
+                                        <a href="javascript:;" @click="onToolTip(v.id, TransactionTypeId.OUT)" :class="{'text-danger':v.leavedDate }">
+                                            <i class="fas fa-chevron-circle-left"></i>{{formatDate(v.leavedDate)}} <i class="fas fa-yen-sign"></i>
+                                        </a>
+                                    </div>
+                                    <div v-if="rowToolTip == v.id && checkRow" class="popup-title position-absolute content-transaction" >
+                                        <div class="container my-3 text-white">
+                                            <div class="row">
+                                                <div class="col-5"> 
+                                                    {{$i('cms_create_date')}}:
+                                                </div>
+                                                <div class="col-7" v-if="listTransaction && listTransaction.createdDate">
+                                                    {{formatDate(listTransaction.createdDate)}}
+                                                </div>  
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5" >
+                                                    {{$i('cms_code_transaction')}}:
+                                                </div>
+                                                <div class="col-7" v-if="listTransaction && listTransaction.id">
+                                                    <div class="row">
+                                                        <div class="col-4">
+                                                            {{listTransaction.id}}
+                                                        </div>
+                                                        <div class="col-8">
+                                                            <button type="button" class="btn_detail_transaction btn bg-confirm text-white" @click="redirectTransaction(listTransaction.id)">
+                                                                <i class="fas fa-info-circle"></i> {{$i('cms_click_detail_transaction')}}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                     
+                                                </div>  
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    {{$i('cms_status_transaction')}}:
+                                                </div>
+                                                <div class="col-7" v-if="listTransaction && listTransaction.completeStatus">
+                                                    <div :class="{'text-green':v.completeStatus == TransactionStatus.COMPLETE, 'text-orange':v.completeStatus == TransactionStatus.PENDDING, 'text-danger':v.completeStatus == TransactionStatus.FAILED}">
+                                                        {{getNameStatus(listTransaction.completeStatus)}}
+                                                    </div>
+                                                </div>  
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    {{$i('cms_content_transaction')}}
+                                                </div>
+                                                <div class="col-7">
+                                                    <div class="nowrap-content" v-if="listTransaction && listTransaction.description">
+                                                        <div v-html="listTransaction.description"></div>
+                                                    </div>
+                                                </div>  
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    {{$i('cms_type_transaction')}}
+                                                </div>
+                                                <div class="col-7" v-if="listTransaction && listTransaction.type != null">
+                                                    {{getNameType(listTransaction.type)}}
+                                                </div>  
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                 </td>
-                                <td>
+                                <td >
                                     <div class="td-nowrap" v-for="(e,i) in v.nearStation" :key=i>
-                                        {{e.stationName}} - {{e.trainLineName}}
+                                        <a href="javascript:;" @click="redirect(v.id)">{{e.stationName}} - {{e.trainLineName}}</a>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="td-nowrap" :title="v.location">{{v.location}}</div>
+                                    <div class="td-nowrap" :title="v.location">
+                                        <a href="javascript:;" @click="redirect(v.id)">{{v.location}}</a>
+                                    </div>
                                 </td>
                                 <td>
-                                    <div class="width-350 td-wrap" :title="v.title">{{v.title}}</div>
+                                    <div class="width-350 td-wrap" :title="v.title">
+                                        <a href="javascript:;" @click="redirect(v.id)">{{v.title}}</a>
+                                    </div>
                                 </td>
                                 <td>
-                                    <div class="text-right">{{formatPrice(v.salary)}}</div>
+                                    <div class="text-right">
+                                        <a href="javascript:;" @click="redirect(v.id)">{{formatPrice(v.salary)}}</a>
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="td-nowrap">
-                                        {{v.candidate.name}}
+                                        <a href="javascript:;" @click="redirect(v.id)"> {{v.candidate ? v.candidate.name : null}}</a>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="td-nowrap" v-for="(e,i) in v.candidateStations" :key="i">
-                                        {{e.trainStationName}} - {{e.trainLineName}}
+                                        <a href="javascript:;" @click="redirect(v.id)"> {{e.trainStationName}} - {{e.trainLineName}}</a>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="td-nowrap">
-                                        {{v.residentName}}
+                                        <a href="javascript:;" @click="redirect(v.id)"> {{v.residentName}}</a>
                                     </div>
                                 </td>
                                 <td>
                                     <div v-for="(e,i) in v.applyShiftJobInPosts" :key=i>
-                                        {{e.name}} {{e.startWorking}}-{{e.endWorking}}
+                                        <a href="javascript:;" @click="redirect(v.id)"> {{e.name}} {{e.startWorking}}-{{e.endWorking}}</a>
                                     </div>
                                 </td>
                                 <td>
                                     <div v-for="(e,i) in v.interviewSchedules" :key="i">
-                                        {{formatDate(e.interviewDate)}} {{formatShift(e.startHour)}} - {{formatShift(e.endHour)}}
+                                        <a href="javascript:;" @click="redirect(v.id)">{{formatDate(e.interviewDate)}} {{formatShift(e.startHour)}} - {{formatShift(e.endHour)}}</a>
                                     </div>
                                 </td>
                             </tr>
@@ -212,6 +292,9 @@ import {
     mapActions,
     mapGetters
 } from 'vuex';
+import {
+        PostApply, TransactionCompleteStatus, TransactionType
+    } from '../../types/enum';
 export default {
     components: {
         ElRemoteSearch: () => import('../_shared/el-search'),
@@ -219,6 +302,12 @@ export default {
     },
     data() {
         return {
+            listBranch: null,
+            objDataBranch: {
+                pageSize: 10,
+                pageIndex: 1,
+                employerId: null,
+            },
             checkAll: false,
             vuexTab: {
                 checktab: true,
@@ -226,38 +315,53 @@ export default {
             },
             orderType:'DESC',
             listTab: [{
-                    status: 10,
+                    status: PostApply.APPLIED,
                     label: 'Applied',
                     css: 'active'
                 },
                 {
-                    status: 7,
+                    status: PostApply.INTERVIEWING,
                     label: 'Interview_setup',
                     css: 'deactive'
                 },
                 {
-                    status: 11,
+                    status: PostApply.HIRED,
                     label: 'Hired',
                     css: 'deactive'
                 },
                 {
-                    status: 12,
+                    status: PostApply.REJECT,
                     label: 'cms_applicant_reject ',
                     css: 'deactive'
                 },
                 {
-                    status: 5,
+                    status: PostApply.PENDDINGUPDATEINFO,
                     label: 'pendding_update_info',
                     css: 'deactive'
                 },
                 {
-                    status: 6,
+                    status: PostApply.WAITINGCONFIRM,
                     label: 'waiting_confirm',
                     css: 'deactive'
                 },
                 {
-                    status: 8,
+                    status: PostApply.HIDE,
                     label: 'Hide',
+                    css: 'deactive'
+                },
+                {
+                    status: PostApply.DECLINE,
+                    label: 'cms_application_decline',
+                    css: 'deactive'
+                },
+                {
+                    status: PostApply.QUIT,
+                    label: 'cms_application_quit',
+                    css: 'deactive'
+                },
+                {
+                    status: PostApply.FIRED,
+                    label: 'cms_application_fired',
                     css: 'deactive'
                 },
             ],
@@ -271,7 +375,8 @@ export default {
                 trainLineId: null,
                 orderType: 'DESC',
                 orderBy:'CREATEDDATE',
-                status: []
+                status: [],
+                branchId:null,
             },
             datePickerEnd: {
                 disabledDate: this.disabledDueDate
@@ -294,10 +399,16 @@ export default {
             listStations: [],
             listTrainLines: [],
             employerPostId: 0,
+            rowToolTip: null,
+            checkType: null,
+            checkRow:false,
+            listTransaction: {},
+            TransactionStatus: TransactionCompleteStatus,
+            TransactionTypeId: TransactionType,
         }
     },
     computed: {
-        ...mapGetters(['province',  'objSearchApplication', 'tabApplication']),
+        ...mapGetters(['province', 'objSearchApplication', 'tabApplication', 'listCompleteStatus', 'listType']),
     },
     watch: {
         'objData.provinceId': function (value) {
@@ -310,10 +421,32 @@ export default {
         'objData.startDate'(value) {
             value = new Date(value)
             if (value.getTime() > new Date(this.objData.endDate).getTime()) this.objData.endDate = null
-        }
+        },
+        'objData.employerId'(value) {
+            if (value) {
+                this.getDataBranch()
+            } else {
+                this.objData.branchId = null
+                this.getDataBranch()
+            }
+        },
     },
     methods: {
-        ...mapActions(['saveSearchApplication', 'saveTabApplication', 'deleteEmployerPost', 'getListApplicationPost', 'getListEmployerMember', 'searchListDistrict', 'searchListStation', 'searchTrainLine']),
+        ...mapActions(['getListTransaction', 'saveSearchApplication', 'saveTabApplication', 'deleteEmployerPost', 'getListApplicationPost', 'getListEmployerMember', 'searchListDistrict', 'searchListStation', 'searchTrainLine','getBranch']),
+        getNameStatus(id) {
+            if(!id) return ''
+            return this.$i(this.listCompleteStatus.find(e => e.id == id).name)
+        },
+        getNameType(id) {
+            if(id == null) return ''
+            return this.listType.find(e => e.id == id).name
+        },
+        onToolTip(id, type) {
+            if((type == this.checkType || this.checkType == null)) this.checkRow = !this.checkRow
+            this.checkType = type
+            this.rowToolTip = id
+            this.getTransaction()
+        },
         getOrderBy(orderType) {
             this.orderType = orderType
             this.objData.orderType = this.orderType;
@@ -321,6 +454,7 @@ export default {
             this.getList();
         },
         searchApplication() {
+            this.objData.branchId = this.objData.branchId || null;
             this.objData.employerId = this.objData.employerId || null;
             this.objData.minSalary = this.objData.minSalary || null;
             this.objData.maxSalary = this.objData.maxSalary || null;
@@ -329,6 +463,29 @@ export default {
             this.objData.stationIds = this.objData.stationIds || [];
             this.saveSearchApplication(this.objData)
             this.getList(1)
+        },
+        getDataBranch() {
+            this.objDataBranch.employerId = this.objData.employerId
+            this.getBranch(this.objDataBranch).then(res => {
+                this.listBranch = res.data;
+            }).catch(err => {
+                this.$error(err.message);
+            })
+        },
+        getTransaction() {
+            let obj = {}
+            obj.relatedIds = this.rowToolTip
+            obj.type = this.checkType
+            this.getListTransaction(obj)
+                .then((res) => {
+                    this.listTransaction = (res.data && res.data.length) ? res.data[0] : null;
+                })
+                .catch(err => {
+                    this.$error(err.message);
+                })
+        },
+        redirectTransaction(id) {
+            return this.$router.push({path:'/transaction', query: {id: id} })
         },
         getList(index) {
             if (index) {
@@ -349,7 +506,7 @@ export default {
                         e.applicantName = e.candidate ? e.candidate.fullName : ''
                         e.residentName = e.candidate ? e.candidate.residentName : ''
                         e.candidateStations = (e.candidate && e.candidate.address && e.candidate.address.stations && e.candidate.address.stations.length) ? e.candidate.address.stations : []
-                        e.location = e.employerPost.shopName
+                        e.location = e.employerPost.branchName
                     })
                     this.applyCount = respon.totalRow
                 })
@@ -377,7 +534,7 @@ export default {
             })
         },
         disabledDueDate(time) {
-            return time.getTime() < this.objData.startDate
+            return time.getTime() < Date.parse(this.objData.startDate)
         },
 
         getDistrict() {
@@ -426,13 +583,12 @@ export default {
             this.getList();
         },
         // transfer detail apply
-        redirect(employerPostId, candidateId) {
+        redirect(id) {
 
             this.$router.push({
                 path: '/application/detail',
                 query: {
-                    employerPostId: employerPostId,
-                    candidateId: candidateId
+                    id: id,
                 }
             });
         }

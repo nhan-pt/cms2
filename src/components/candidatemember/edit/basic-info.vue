@@ -55,8 +55,13 @@
                 <div class="col-9">
                     <div class="content-candidate-right p-y-15">
                         <div class="box-row rule justify-content-between">
-                            <div class="text-normal w-100">
-                                <el-input type="number" :placeholder="$i('phone_number')" v-model="objData.mobile"></el-input>
+                            <div class="text-normal w-100" :class="{'is-invalid has-danger': $v.objData.mobile.$dirty && $v.objData.mobile.$invalid}">
+                                <el-input
+                                    type='text'
+                                    placeholder="##-####-####"
+                                    @input="$v.objData.mobile.$touch()"
+                                    v-model="objData.mobile" >
+                                </el-input>
                             </div>
                         </div>
                     </div>
@@ -91,8 +96,8 @@
                 <div class="col-9">
                     <div class="content-candidate-right p-y-15">
                         <div class="box-row rule justify-content-between">
-                            <div class="text-normal w-100">
-                                <input type="password" class="input-text__ha" v-model="objData.password">
+                            <div class="text-normal w-100" :class="{'is-invalid has-danger': $v.objData.password.$dirty && $v.objData.password.$invalid}">
+                                <el-input type="password" v-model="objData.password"></el-input>
                             </div>
                         </div>
                     </div>
@@ -109,8 +114,8 @@
                 <div class="col-9">
                     <div class="content-candidate-right p-y-15">
                         <div class="box-row rule justify-content-between">
-                            <div class="text-normal w-100 pointer" @click="changePass = true">
-                                Change PassWord
+                            <div class="group-title text-bold w-100 pointer" @click="changePass = true">
+                                {{$i('cms_employer_change_passWord')}}
                             </div>
                         </div>
                     </div>
@@ -127,8 +132,8 @@
                 <div class="col-9">
                     <div class="content-candidate-right p-y-15">
                         <div class="box-row rule justify-content-between">
-                            <div class="text-normal w-100">
-                                <input type="password" class="input-text__ha" v-model="objData.confirmPassword">
+                            <div class="text-normal w-100" :class="{'is-invalid has-danger': $v.objData.confirmPassword.$dirty && $v.objData.confirmPassword.$invalid}">
+                                <el-input type="password" v-model="objData.confirmPassword"></el-input>
                             </div>
                         </div>
                     </div>
@@ -392,23 +397,25 @@
             <div class="col-12">
                 <div class="mb-2 text-font-20 text-center"> {{$i('cms_employer_change_passWord')}}</div>
             </div>
-            <div class="col-12" :class="{'is-invalid has-danger': $v.newPass.$dirty && $v.newPass.$invalid}">
+            <div class="col-12" :class="{'is-invalid has-danger': $v.updatePassCandidate.newPass.$dirty && $v.updatePassCandidate.newPass.$invalid}">
                 {{$i('cms_employer_create_password')}}
-                <el-input type="password" class="change_password" value="" v-model="newPass" @input="$v.newPass.$touch()"></el-input>
+                <el-input type="password" class="change_password" value="" v-model="updatePassCandidate.newPass" @input="$v.updatePassCandidate.newPass.$touch()"></el-input>
             </div>
-            <div class="col-12" :class="{'is-invalid has-danger': $v.confirmPass.$dirty && $v.confirmPass.$invalid}">
+            <div class="col-12" :class="{'is-invalid has-danger': $v.updatePassCandidate.confirmPass.$dirty && $v.updatePassCandidate.confirmPass.$invalid}">
                 {{$i('cms_employer_create_confirm_password ')}}
-                <el-input type="password" class="change_password" value="" v-model="confirmPass" @input="$v.confirmPass.$touch()"></el-input>
+                <el-input type="password" class="change_password" value="" v-model="updatePassCandidate.confirmPass" @input="$v.updatePassCandidate.confirmPass.$touch()"></el-input>
             </div>
         </div>
         <div class="row display-flex mt-5">
             <div class="col-12">
                 <div class=" list-btn__ha text-center">
                     <div class="item-btn">
-                        <input class="btn width-120 text-white btn-list-view bg-27ACCE" type="button" @click="changePassWord" :value="$i('cms_execute')" />
+                        <a href="javascript:;" class="text-links bg-27ACCE" @click="changePassWord">
+                                            {{$i('cms_execute')}} </a>
                     </div>
                     <div class="item-btn">
-                        <input class="btn width-120 text-white btn-list-view bg-cancel" type="button" @click="changePass = false" :value="$i('Cancel')" />
+                        <a href="javascript:;" class="text-links bg-cancel" @click="changePass = false">
+                                            {{$i('Cancel')}} </a>
                     </div>
                 </div>
             </div>
@@ -427,21 +434,50 @@ import {
     email,
     sameAs
 } from 'vuelidate/lib/validators'
-import Vuelidate from 'vuelidate'
-import Vue from 'vue'
+const mustBeMobile = function(value) {
+    return this.formatMobile(value)
+} 
+const mustBeNotText = function(value) {
+    return this.formatText(value)
+} 
 
-Vue.use(Vuelidate)
 export default {
     name: "basic-info",
     props: ['value'],
+    validations: {
+        objData: {
+            mobile: {
+                mustBeMobile, mustBeNotText
+            },
+            password: {
+                required,
+            },
+            confirmPassword: {
+                required, sameAs: sameAs(function() {
+                    return this.objData.password;
+                }) 
+            },
+        },
+        updatePassCandidate: {
+            newPass: {
+                required,
+            },
+            confirmPass: {
+                sameAs: sameAs('newPass')
+            }
+        }
+    },
     data() {
         return {
             changePass: false,
-            newPass: null,
-            confirmPass: null,
+            updatePassCandidate: {
+                newPass: null,
+                confirmPass: null,
+            },
             objData: {
                 address: {},
-                memberCard: {}
+                memberCard: {},
+                mobile: null
             },
             loading: false,
             loadZipcode: false,
@@ -465,14 +501,6 @@ export default {
     components: {
         selectLocation: () => import('../../_common/selectLocation'),
         UploadImage: () => import('../../_common/upload')
-    },
-    validations: {
-        newPass: {
-            required,
-        },
-        confirmPass: {
-            sameAs: sameAs('newPass')
-        }
     },
     watch: {
         'value'(value) {
@@ -509,12 +537,18 @@ export default {
         ...mapActions(['getListZipCode', 'searchListDistrict',
             'searchListStation', 'getAllTag','updatePass'
         ]),
-        clearValidate(type) {
-            return this.$refs.form.clearValidate(type)
-        },
         confirm() {
-            if (!this.$route.params.id && (this.objData.password != this.objData.confirmPassword)) {
-                this.$message(this.$i('Check confirm password!'), 'error');
+            if (!this.$route.params.id) {
+                let invalid = this.$v.objData.$invalid;
+                    if (invalid) {
+                        this.$v.objData.$touch();
+                        this.validate = true
+                        this.$message(this.$i('cms_job_post_enter_required_fields'), 'warning');
+                        return;
+                    }
+                    else{
+                        this.$emit('confirmTab')
+                    }
             } else {
                 this.$emit('confirmTab')
             }
@@ -526,11 +560,21 @@ export default {
             }]
         },
         nextTab() {
-            if (!this.$route.params.id && (this.objData.password != this.objData.confirmPassword)) {
-                this.$message(this.$i('Check confirm password!'), 'error');
+            if (!this.$route.params.id) {
+                let invalid = this.$v.objData.$invalid;
+                    if (invalid) {
+                        this.$v.objData.$touch();
+                        this.validate = true
+                        this.$message(this.$i('cms_job_post_enter_required_fields'), 'warning');
+                        return;
+                    }
+                    else{
+                        this.$emit('nextTab')
+                    }
             } else {
                 this.$emit('nextTab')
             }
+            
         },
         remoteZipcode(query) {
             setTimeout(() => {
@@ -554,29 +598,27 @@ export default {
             })
         },
         changePassWord() {
-            if (this.$route.params.id) {
-                let invalid = this.$v.$invalid;
+            let invalid = this.$v.updatePassCandidate.$invalid;
             if (invalid) {
-                this.$v.$touch();
-                this.type = 'error';
-                this.message =  $i('cms_employer_check_required')
+                this.$v.updatePassCandidate.$touch();
+                this.validate = true
+                this.$message(this.$i('cms_employer_check_required'), 'warning');
                 return;
-            }
-            if (this.newPass === this.confirmPass) {
+            } else {
                 let objConfirm = {
-                        memberId: this.$route.params.id,
-                        password: this.newPass
+                    memberId: this.$route.params.id,
+                    password: this.updatePassCandidate.newPass
                 }
                 this.updatePass(objConfirm)
                 .then(res => {
                     this.$message(this.$i('Successful'));
-                      this.changePass = false
+                    this.changePass = false
                     })
                 .catch(err => {
-                      this.$message(this.$i(err.message),'error');
-                  })
-                }
-                }
+                    this.$message(this.$i(err.message),'error');;
+                })
+            }
+                
         },
         getDataStation() {
             let dataSearch = Object.assign({}, this.objDataLocation);

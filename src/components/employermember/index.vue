@@ -16,14 +16,14 @@
         <div class="row mt-2">
             <div class="col-md-6 col-lg-4 col-12">
                 <div class="text-bold mb-2">{{$i('cms_emloyer_list_prefecture')}}</div>
-                <el-select v-model="objData.provinceId" collapse-tags clearable :placeholder="listProvinces[12].name" remote>
-                    <el-option v-for="item in listProvinces" :key="item.id" :label="item.name" :value="item.id">
+                <el-select v-model="objData.provinceId" collapse-tags filterable clearable :placeholder="$i('Province')" remote>
+                    <el-option v-for="item in province" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
             </div>
             <div class="col-md-6 col-lg-4 col-12">
                 <div class="text-bold mb-2">{{$i('cms_employer_list_city')}}</div>
-                <el-select v-model="objData.districtId" collapse-tags clearable :placeholder="listDistricts[0].name" remote>
+                <el-select v-model="objData.districtId" collapse-tags filterable clearable :placeholder="$i('District')" remote>
                     <el-option v-for="item in listDistricts" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
@@ -39,14 +39,14 @@
         <div class="row mt-2">
             <div class="col-md-6 col-lg-4 col-12">
                 <div class="text-bold mb-2">{{$i('cms_employer_list_line')}}</div>
-                <el-select v-model="objData.trainLineId" collapse-tags :placeholder="listTrainLines[0].name" remote clearable disabled="disabled">
-                    <el-option v-for="item in listTrainLines" :key="item.trainLineId" :label="item.name" :value="item.trainLineId">
+                <el-select v-model="objData.trainLineId" collapse-tags :placeholder="$i('SEARCH_trainLine')" remote clearable disabled="disabled">
+                    <el-option v-for="item in listStations" :key="item.id" :label="item.name" :value="item.trainLineId">
                     </el-option>
                 </el-select>
             </div>
             <div class="col-md-6 col-lg-4 col-12">
                 <div class="text-bold mb-2">{{$i('cms_employer_list_Station')}}</div>
-                <el-select v-model="objData.stationIds" multiple collapse-tags :placeholder="listStations[0].name" remote clearable>
+                <el-select v-model="objData.stationIds" multiple filterable collapse-tags :placeholder="$i('cms_job_post_input_station')" remote clearable>
                     <el-option v-for="item in listStations" :key="item.id" :label="item.name" :value="item.id">
                     </el-option>
                 </el-select>
@@ -105,13 +105,13 @@
         </div>
         <div class="row mt-4 mb-4">
             <div class="col-12 execute-line">
-<!--                <div class="text-chosen">-->
-<!--                    {{$i('cms_employer_list_select_employer')}}-->
-<!--                </div>-->
-<!--                <el-select v-model="statusChange" collapse-tags class="input-search-2 input-chosen" :placeholder="$i('cms_job_post_non_publish')">-->
-<!--                    <el-option v-for="e in listSection" :value="e.id" :key="e.id" :label="$i(e.label)"></el-option>-->
-<!--                </el-select>-->
-<!--                <input class="btn text-bold text-white btn-list-view bg-27ACCE" type="button" @click="saveStatus" :value="$i('cms_application_execute')" />-->
+                <!--                <div class="text-chosen">-->
+                <!--                    {{$i('cms_employer_list_select_employer')}}-->
+                <!--                </div>-->
+                <!--                <el-select v-model="statusChange" collapse-tags class="input-search-2 input-chosen" :placeholder="$i('cms_job_post_non_publish')">-->
+                <!--                    <el-option v-for="e in listSection" :value="e.id" :key="e.id" :label="$i(e.label)"></el-option>-->
+                <!--                </el-select>-->
+                <!--                <input class="btn text-bold text-white btn-list-view bg-27ACCE" type="button" @click="saveStatus" :value="$i('cms_application_execute')" />-->
             </div>
         </div>
         <div class="row">
@@ -120,9 +120,9 @@
                     <table class="table table-minwidth  fixed-table">
                         <thead>
                             <tr class="border-top-none">
-                                <th class=" text-center">
+                                <!-- <th class=" text-center">
                                     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange"></el-checkbox>
-                                </th>
+                                </th> -->
                                 <th class="fixed-left-row">
                                     ID
                                 </th>
@@ -133,52 +133,43 @@
                                     {{$i('cms_employer_list_location_num')}}
                                 </th>
                                 <th class=""> {{$i('cms_employer_list_Address')}}</th>
-                                <th class=""> {{$i('cms_employer_list_Station')}}</th>
                                 <th class="">{{$i('cms_employer_list_employees_number')}}
                                 </th>
                                 <th class=""> {{$i('cms_employer_list_capital')}} (万円)</th>
                                 <th class=""> {{$i('cms_employer_list_Section')}}</th>
                                 <th class=""> {{$i('cms_employer_list_Status')}}</th>
-                                <th class="fixed-right-row"> </th>
+                                <th class="fixed-right-row"> {{ $i('cms_job_post_action') }} </th>
                             </tr>
                         </thead>
                         <tbody v-if="employerMemberList">
                             <tr v-for="v in employerMemberList" :key="`${v.id}`" @click="$router.push('/employermember/detail/' + v.id)">
-                                <td class="width-60 text-center" @click.stop="">
+                                <!-- <td class="width-60 text-center" @click.stop="">
                                     <el-checkbox-group v-model="checkedIndex" @change="handleCheckedIndex">
                                         <el-checkbox :label="v.id" :key="v.id"></el-checkbox>
                                     </el-checkbox-group>
-                                </td>
+                                </td> -->
                                 <td class="fixed-left-row">
-                                    <div >{{ v.id }}</div>
+                                    <div>{{ v.id }}</div>
                                 </td>
                                 <td class="td-nowrap" :title="v.companyName">
                                     <div class="display_inline">{{ v.companyName }}</div>
                                 </td>
-                                <td class="text-left td-nowrap" :title="v.totalBranches">
-                                    <div class="display_inline">{{ v.totalBranches }}</div>
+                                <td class="text-right td-nowrap" :title="v.totalBranchs">
+                                    <div class="display_inline">{{ v.totalBranchs }}</div>
                                 </td>
                                 <td class="text-left td-nowrap">
                                     <div class="display_inline" :title="v.address.provinceName + '' +v.address.districtName+''+v.address.townName+''+v.address.address" v-if="v.address">{{ v.address.provinceName }}{{v.address.districtName }}{{v.address.townName}}{{v.address.address}}</div>
-                                </td>
-
-                                <td class="td-wrap">
-                                    <div class="display_inline" v-if="v.address">
-                                        <div v-for="i in v.address.stations" :key="i.id" :title="i.trainStationName">{{ i.trainStationName }}</div>
-                                    </div>
                                 </td>
                                 <td>
                                     <div class="display_inline" :title="v.totalEmployee">{{ v.totalEmployee }}</div>
                                 </td>
                                 <td> {{(v.capital) }}</td>
-                                <td>{{v.section === 1 ? $i('cms_employer_list_public') : v.section === 0 ? $i('cms_employer_list_private') : ""}}</td>
-                                <td>{{v.status === 1 ? $i('cms_employer_list_active') : v.status === 2 ? $i('cms_employer_list_unconfirm') : " "}}</td>
+                                <td>{{v.section === PUBLIC ? $i('cms_employer_list_public') : v.section === PRIVATE ? $i('cms_employer_list_private') : ""}}</td>
+                                <td>{{v.status === ACTIVE ? $i('cms_employer_list_active') : v.status === UNCONFIRM ? $i('cms_employer_list_unconfirm') : " "}}</td>
                                 <td class="btn-action fixed-right-row" @click.stop="">
-                                    <button class="btn_edit_employer">
+                                    <button class="btn_edit_employer bg-purple">
                                         <i class="far fa-edit" @click="$router.push('/employermember/edit/' + v.id)"></i>
                                     </button>
-                                    <button class="btn_trash_employer" @click.stop="">
-                                        <i class="far fa-trash-alt" @click="deleteEvent(v.id)"></i> </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -187,17 +178,17 @@
             </div>
         </div>
         <pager :total="employerMemberCount" :pageIndex="objData.pageIndex" :pageSize="objData.pageSize" @change="pageChange" />
-<!--        <div class="row mt-4 mb-5">-->
-<!--            <div class="col-12 execute-line">-->
-<!--                <div class="text-chosen">-->
-<!--                    Select Employer-->
-<!--                </div>-->
-<!--                <el-select v-model="statusChange" collapse-tags class="input-search-2 input-chosen" :placeholder="$i('cms_job_post_non_publish')">-->
-<!--                    <el-option v-for="e in listSection" :value="e.id" :key="e.id" :label="$i(e.label)"></el-option>-->
-<!--                </el-select>-->
-<!--                <input class="btn text-bold text-white btn-list-view bg-27ACCE" type="button" @click="saveStatus" :value="$i('cms_application_execute')" />-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        <div class="row mt-4 mb-5">-->
+        <!--            <div class="col-12 execute-line">-->
+        <!--                <div class="text-chosen">-->
+        <!--                    Select Employer-->
+        <!--                </div>-->
+        <!--                <el-select v-model="statusChange" collapse-tags class="input-search-2 input-chosen" :placeholder="$i('cms_job_post_non_publish')">-->
+        <!--                    <el-option v-for="e in listSection" :value="e.id" :key="e.id" :label="$i(e.label)"></el-option>-->
+        <!--                </el-select>-->
+        <!--                <input class="btn text-bold text-white btn-list-view bg-27ACCE" type="button" @click="saveStatus" :value="$i('cms_application_execute')" />-->
+        <!--            </div>-->
+        <!--        </div>-->
 
     </div>
 </div>
@@ -208,6 +199,7 @@ import {
     mapActions,
     mapGetters
 } from 'vuex';
+import {EmployerSection,EmployerStatus} from '../../types/enum'
 import editEmployer from './edit'
 
 export default {
@@ -220,13 +212,13 @@ export default {
             checkedIndex: [],
             isIndeterminate: true,
             listSection: [{
-                    id: 1,
+                    id: EmployerSection.PUBLIC,
                     label: 'cms_employer_list_public',
                     status: 'public',
                     class: 'btn__pill__green'
                 },
                 {
-                    id: "0",
+                    id: EmployerSection.PRIVATE,
                     label: 'cms_employer_list_private',
                     status: 'private',
                     class: 'btn__pill__red'
@@ -234,13 +226,13 @@ export default {
 
             ],
             listStatus: [{
-                    id: 2,
+                    id: EmployerStatus.UNCONFIRM,
                     label: 'cms_employer_list_unconfirm',
                     status: 'UNCONFIRM',
                     class: 'btn__pill__green'
                 },
                 {
-                    id: 1,
+                    id: EmployerStatus.ACTIVE,
                     label: 'cms_employer_list_active',
                     status: 'ACTIVE',
                     class: 'btn__pill__red'
@@ -260,58 +252,55 @@ export default {
             listStations: [],
             listTrainLines: [],
             statusChange: null,
-
+            PUBLIC: EmployerSection.PUBLIC,
+            PRIVATE: EmployerSection.PRIVATE,
+            UNCONFIRM: EmployerStatus.UNCONFIRM,
+            ACTIVE: EmployerStatus.ACTIVE
         }
     },
     watch: {
-    'searchKey' (value) {
-      this.searchLocation = ''
-      this.searchStation = ''
-      if(value || this.searchLocation || this.searchStation) this.checkKeyword = true
-      else this.checkKeyword = false
+        'searchKey'(value) {
+            this.searchLocation = ''
+            this.searchStation = ''
+            if (value || this.searchLocation || this.searchStation) this.checkKeyword = true
+            else this.checkKeyword = false
 
-      this.filterId(value, this.employerPostList, 'obj',  'id')
-    },
-    'searchLocation' (value) {
-      this.searchKey = ''
-      this.searchStation = ''
-      if(value || this.searchKey || this.searchStation) this.checkKeyword = true
-      else this.checkKeyword = false
-      this.filterId(value, this.employerPostList, 'obj', 'shopName')
-    },
-    'searchStation' (value) {
-      this.searchLocation = ''
-      this.searchKey = ''
-      if(value || this.searchLocation || this.searchKey) this.checkKeyword = true
-      else this.checkKeyword = false
-      this.filterId(value, this.employerPostList, 'array', 'stations')
-    },
-    'inactive'(value) {
-      this.objData.hideInActive = +value
-      this.getList(1)
-    },
-    'objData.provinceId': function (value) {
-      this.objLocation.provinceId = value;
-      this.objData.districtId = null;
-      this.objData.trainLineId = null;
-      this.objData.stationId = [];
-      this.getDistrict();
-      this.getStation();
-    },
-    'objData.trainLineId': function (value) {
-      this.objLocation.trainLineId = value;
-      this.objData.stationId = [];
-      this.getStation();
-    },
+            this.filterId(value, this.employerPostList, 'obj', 'id')
+        },
+        'searchLocation'(value) {
+            this.searchKey = ''
+            this.searchStation = ''
+            if (value || this.searchKey || this.searchStation) this.checkKeyword = true
+            else this.checkKeyword = false
+            this.filterId(value, this.employerPostList, 'obj', 'shopName')
+        },
+        'searchStation'(value) {
+            this.searchLocation = ''
+            this.searchKey = ''
+            if (value || this.searchLocation || this.searchKey) this.checkKeyword = true
+            else this.checkKeyword = false
+            this.filterId(value, this.employerPostList, 'array', 'stations')
+        },
+        'inactive'(value) {
+            this.objData.hideInActive = +value
+            this.getList(1)
+        },
+        'objData.provinceId': function (value) {
+            this.objLocation.provinceId = value;
+            this.objData.districtId = null;
+            this.objData.trainLineId = null;
+            this.objData.stationId = [];
+            this.getDistrict();
+            this.getStation();
+        },
     },
     computed: {
-        ...mapGetters(['employerMemberList', 'employerMemberCount', 'objData'])
+        ...mapGetters(['employerMemberList', 'employerMemberCount', 'objData','province'])
     },
     methods: {
-        ...mapActions(['saveSearchObj', 'getListEmployerMember', 'searchListProvince', 'searchListDistrict', 'searchTrainLine', 'searchListStation', 'updateSectionEmployer', 'deleteEmployer']),
+        ...mapActions(['saveSearchObj', 'getListEmployerMember', 'searchListProvince', 'searchListDistrict', 'searchTrainLine', 'searchListStation', 'updateSectionEmployer']),
 
         getList(index) {
-            let loading = this.$loading.show();
             if (index) {
                 this.objData.pageIndex = index;
             }
@@ -328,10 +317,8 @@ export default {
             this.saveSearchObj(this.objData);
             this.getListEmployerMember(this.objData)
                 .then(() => {
-                    loading.hide();
                 })
                 .catch(err => {
-                    loading.hide();
                     this.$error(err.message);
                 })
         },
@@ -341,15 +328,16 @@ export default {
             return money.split(',')[0]
         },
         //get select
-        getProvince() {
-            this.searchListProvince()
-                .then((respon) => {
-                    this.listProvinces = respon.data
-                }).catch((error) => {
-                    this.$error(error.message);
-                })
-        },
+        // getProvince() {
+        //     this.searchListProvince()
+        //         .then((respon) => {
+        //             this.listProvinces = respon.data
+        //         }).catch((error) => {
+        //             this.$error(error.message);
+        //         })
+        // },
         getDistrict() {
+            this.objLocation.provinceId = this.objLocation.provinceId ? this.objLocation.provinceId : -1
             this.searchListDistrict(this.objLocation)
                 .then((respon) => {
                     this.listDistricts = respon.data
@@ -357,15 +345,8 @@ export default {
                     this.$error(error.message);
                 })
         },
-        getTrainLine() {
-            this.searchTrainLine(this.objLocation)
-                .then((respon) => {
-                    this.listTrainLines = respon.data
-                }).catch((error) => {
-                    this.$error(error.message);
-                })
-        },
         getStation() {
+            this.objLocation.trainLineId = this.objLocation.trainLineId ? this.objLocation.trainLineId : -1
             this.searchListStation(this.objLocation)
                 .then((respon) => {
                     this.listStations = respon.data;
@@ -405,27 +386,7 @@ export default {
             this.checkAll = checkedCount === this.employerMemberList.map(e => e.id).length;
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.employerMemberList.map(e => e.id).length;
         },
-        //delete
-        deleteEvent(id) {
-            let dataSave = {
-                id: id,
-                status: 0
-            }
-            let confirm = 'DoYouWantDelete'
-            this.$confirm(this.$i(confirm)).then(() => {
-                this.deleteEmployer(dataSave)
-                    .then((res) => {
-                        if (res.success) {
-                            this.$message(this.$i('Successful'));
-                        }
-                        this.getList(1);
-                        this.checkedIndex = []
-                    })
-                    .catch(err => {
-                        this.$error(err.message);
-                    })
-            })
-        },
+        
         // update section
         saveStatus() {
             let dataSave = {
@@ -460,15 +421,11 @@ export default {
     },
     mounted() {
         this.getList();
-        this.getProvince();
+        // this.getProvince();
         this.getDistrict();
-        this.getTrainLine();
         this.getStation()
 
     },
-    created() {
-        this.getList();
-    }
 }
 </script>
 

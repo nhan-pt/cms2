@@ -49,10 +49,12 @@ export const updateApplications = ({ commit }, opts) => {
 };
 
 export const updateStatusApply = ({ commit }, opts) => {
+    let idApply = opts.id
+    delete opts.id
     return new Promise((resolve, reject) => {
         axios({
             data: {
-                url: '/cms/post-apply/status-update',
+                url: '/1.3/cms/post-apply/update-status/' + idApply,
                 ...opts
             },
             method: 'PUT'
@@ -64,6 +66,40 @@ export const updateStatusApply = ({ commit }, opts) => {
     })
 };
 
+export const hiredOrQuitApply = ({ commit }, opts) => {
+    let idApply = opts.id
+    delete opts.id
+    return new Promise((resolve, reject) => {
+        axios({
+            data: {
+                url: '/1.3/cms/post-apply/update-status/' + idApply,
+                ...opts
+            },
+            method: 'PUT'
+        }).then(response => {
+            return resolve(response);
+        }).catch(error => {
+            return reject(error);
+        })
+    })
+};
+export const interviewApply = ({ commit }, opts) => {
+    let idApply = opts.id
+    delete opts.id
+    return new Promise((resolve, reject) => {
+        axios({
+            data: {
+                url: '/1.3/cms/post-apply/update-status/' + idApply,
+                ...opts
+            },
+            method: 'PUT'
+        }).then(response => {
+            return resolve(response);
+        }).catch(error => {
+            return reject(error);
+        })
+    })
+};
 export const saveShiftApply = ({ commit }, opts) => {
     return new Promise((resolve, reject) => {
         axios({
@@ -116,4 +152,36 @@ export const saveSearchApplication = ({ commit }, data) => {
 
 export const saveTabApplication = ({ commit }, data) => {
     return commit('SAVE_TAB_APPLICATION', data);
+};
+
+export const addInterviewSchedule = ({ commit }, opts) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            data: {
+                url: '/cms/post-apply/save-post-apply-interview-schedule-by-employer',
+                ...opts
+            },
+            method: 'POST'
+        }).then(response => {
+            return resolve(response);
+        }).catch(error => {
+            return reject(error);
+        })
+    })
+};
+
+export const getCommentEmployer = ({ commit }, opts) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            data: {
+                url: '/cms/employer/application/comment/' + opts.id + '/PostApply?pageIndex=' + opts.pageIndex + '&pageSize=20',
+                ...opts
+            },
+            method: 'get'
+        }).then(response => {
+            return resolve(response);
+        }).catch(error => {
+            return reject(error);
+        })
+    })
 };

@@ -10,7 +10,7 @@ export const getListZipCode = ({ commit }, opts) => {
             params: {
                 zipCode: opts,
                 pageIndex: 1,
-                pageSize: 50
+                pageSize: 20
             },
         }).then(response => {
             commit('GET_LIST_ZIPCODE', response);
