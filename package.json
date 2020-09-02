@@ -13,7 +13,7 @@
     "aspnet-prerendering": "^3.0.1",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
-    "bootstrap-vue": "^1.5.1",
+    "bootstrap-vue": "^2.0.0",
     "browser-image-compression": "^1.0.6",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.3",
