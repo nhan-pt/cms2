@@ -33,7 +33,7 @@
     "luxon": "^1.9.0",
     "mobile-detect": "^1.4.1",
     "moment": "^2.20.1",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "nprogress": "^0.2.0",
     "sweetalert2": "7.3.4",
     "tinymce": "^5.0.7",
